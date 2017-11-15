@@ -20,7 +20,7 @@ class Player():
 
     def update(self):
         if self.y < self.bottom:
-            self.a_y += 0.15
+            self.a_y = 1
         self.v_x += self.a_x
         self.v_y += self.a_y
         if self.y == self.bottom:
@@ -57,14 +57,20 @@ class Player():
             self.v_y /= 20
 
     def move_left(self):
-        self.a_x = -3
+        if self.y == self.bottom:
+            self.a_x = -3
+        else:
+            self.a_x = -0.5
 
     def move_left_stop(self):
         if self.a_x < 0:
             self.a_x = 0
 
     def move_right(self):
-        self.a_x = 3
+        if self.y == self.bottom:
+            self.a_x = 3
+        else:
+            self.a_x = 0.5
 
     def move_right_stop(self):
         if self.a_x > 0:
