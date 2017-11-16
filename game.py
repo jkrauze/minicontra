@@ -13,15 +13,20 @@ pg.display.set_caption(c.NAME)
 
 class Game:
     def __init__(self):
-        self.player = Player()
-        self.block = Block(100, 20, 80, c.SIZE[1] - 80)
+        self.player = Player(self)
         self.block_list = pg.sprite.Group()
-        self.block_list.add(self.block)
+        self.block_list.add(Block(100, 20, 180, c.SIZE[1] - 150))
+        self.block_list.add(Block(100, 20, 280, c.SIZE[1] - 120))
+        self.block_list.add(Block(800, 20, 0, c.SIZE[1] - 20))
+        self.block_list.add(Block(50, 200, 500, c.SIZE[1] - 220))
+        self.block_list.add(Block(50, 200, 100, c.SIZE[1] - 220))
         self.sprites_list = pg.sprite.Group()
         self.sprites_list.add(self.player)
-        self.sprites_list.add(self.block)
+        for block in self.block_list:
+            self.sprites_list.add(block)
         self.done = False
         self.clock = pg.time.Clock()
+        self.skip = False
 
     def run(self):
         self.done = False
@@ -50,12 +55,9 @@ class Game:
                 elif event.key == pg.K_UP:
                     self.player.jump_stop()
 
-        screen.fill(col.RED)
+        screen.fill(c.BACKGROUND_COLOR)
         self.sprites_list.update()
         self.sprites_list.draw(screen)
-
-        if pg.sprite.spritecollide(self.player, self.block_list, False):
-            print("COLLLISSIOSNNN!!!")
 
         pg.display.flip()
         self.clock.tick(c.TICK)

@@ -2,8 +2,8 @@ import pygame as pg
 import config as c
 import color as col
 
-class Block(pg.sprite.Sprite):
 
+class Block(pg.sprite.Sprite):
     def __init__(self, width, height, x, y):
         super().__init__()
         self.width = width

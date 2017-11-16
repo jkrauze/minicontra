@@ -4,23 +4,24 @@ import color as col
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, game):
         super().__init__()
-        self.width = 10
+        self.game = game
+        self.width = 20
         self.height = 30
         self.image = pg.Surface([self.width, self.height])
         self.rect = self.image.get_rect()
         self.bottom = c.SIZE[1] - self.height
         self.wall = c.SIZE[0] - self.width
         self.rect.x = c.SIZE[0] // 2
-        self.rect.y = self.bottom
+        self.rect.y = self.bottom - 200
         self.v_x = 0
         self.v_y = 0
         self.a_x = 0
         self.a_y = 0
-        self.v_max = 5
-        self.friction = 0.75
-        self.color = col.BLUE
+        self.v_max = 4
+        self.friction = 0.6
+        self.color = col.GREEN
         self.image.fill(self.color)
         self.moving_left = False
         self.moving_right = False
@@ -28,6 +29,9 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         way = 0
+        self.rect.y += 1
+        collides = pg.sprite.spritecollide(self, self.game.block_list, False)
+        self.rect.y -= 1
         if self.moving_right and self.moving_left:
             way = self.last_move
         elif self.moving_left:
@@ -35,20 +39,27 @@ class Player(pg.sprite.Sprite):
         elif self.moving_right:
             way = 2
         if way == 1:
-            if self.rect.y == self.bottom:
+            if collides:
                 self.a_x = -3
             else:
                 self.a_x = -1
         elif way == 2:
-            if self.rect.y == self.bottom:
+            if collides:
                 self.a_x = 3
             else:
                 self.a_x = 1
-        if self.rect.y < self.bottom:
+
+        if not collides:
             self.a_y = 1
+        else:
+            self.a_y = 0
+            if self.v_y > 0:
+                self.rect.y = collides[0].rect.top - self.height
+                self.v_y = 0
+
         self.v_x += self.a_x
         self.v_y += self.a_y
-        if self.rect.y == self.bottom:
+        if collides:
             self.v_x *= self.friction
         if self.v_x > self.v_max:
             self.v_x = self.v_max
@@ -57,11 +68,23 @@ class Player(pg.sprite.Sprite):
         elif abs(self.v_x) < 1:
             self.v_x = 0
         self.rect.x += self.v_x
+        collides_x = pg.sprite.spritecollide(self, self.game.block_list, False)
+        if collides_x:
+            if self.v_x > 0:
+                self.rect.right = collides_x[0].rect.left
+            else:
+                self.rect.left = collides_x[0].rect.right
+            self.v_x = 0
+            self.a_x = 0
         self.rect.y += self.v_y
-        if self.rect.y > self.bottom:
-            self.a_y = 0
+        collides_y = pg.sprite.spritecollide(self, self.game.block_list, False)
+        if collides_y:
+            if self.v_y > 0:
+                self.rect.y = collides_y[0].rect.top - self.height
+            else:
+                self.rect.y = collides_y[0].rect.bottom
             self.v_y = 0
-            self.rect.y = self.bottom
+            self.a_y = 0
         if self.rect.x < 0:
             self.a_x = 0
             self.v_x = 0
@@ -74,9 +97,14 @@ class Player(pg.sprite.Sprite):
                                                                      self.a_x, self.a_y))
 
     def jump(self):
-        if self.bottom - self.rect.y < 3:
+        x_diff = -self.v_x * c.JUMP_PRECISION
+        self.rect.x += x_diff
+        self.rect.y += 1
+        if pg.sprite.spritecollide(self, self.game.block_list, False):
             self.a_y = 0
             self.v_y = -15
+        self.rect.x -= x_diff
+        self.rect.y -= 1
 
     def jump_stop(self):
         if self.v_y < 0:
@@ -99,3 +127,9 @@ class Player(pg.sprite.Sprite):
         self.moving_right = False
         if self.a_x > 0:
             self.a_x = 0
+
+    def stop(self):
+        self.a_x = 0
+        self.a_y = 0
+        self.v_x = 0
+        self.v_y = 0
