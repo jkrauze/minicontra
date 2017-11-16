@@ -12,7 +12,7 @@ class Player(pg.sprite.Sprite):
         self.image = pg.Surface([self.width, self.height])
         self.rect = self.image.get_rect()
         self.bottom = c.SIZE[1] - self.height
-        self.wall = c.SIZE[0] - self.width
+        self.middle = c.SIZE[0] // 2
         self.rect.x = c.SIZE[0] // 2
         self.rect.y = self.bottom - 200
         self.v_x = 0
@@ -89,10 +89,12 @@ class Player(pg.sprite.Sprite):
             self.a_x = 0
             self.v_x = 0
             self.rect.x = 0
-        elif self.rect.x > self.wall:
-            self.a_x = 0
-            self.v_x = 0
-            self.rect.x = self.wall
+        elif self.rect.x > self.middle:
+            self.rect.x -= self.v_x
+            for block in self.game.block_list:
+                block.rect.x -= self.v_x
+                if block.rect.right < 0:
+                    block.kill()
         print("x:{};y:{};v_x:{:.2f};v_y:{:.2f};a_x:{};a_y:{}".format(self.rect.x, self.rect.y, self.v_x, self.v_y,
                                                                      self.a_x, self.a_y))
 
