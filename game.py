@@ -2,7 +2,6 @@
 
 import pygame as pg
 import config as c
-import color as col
 from player import Player
 from block import Block
 
@@ -13,13 +12,13 @@ pg.display.set_caption(c.NAME)
 
 class Game:
     def __init__(self):
-        self.player = Player(self)
+        self.player = Player(self,0)
         self.block_list = pg.sprite.Group()
         self.block_list.add(Block(100, 20, 180, c.SIZE[1] - 150))
         self.block_list.add(Block(100, 20, 280, c.SIZE[1] - 120))
         self.block_list.add(Block(1600, 20, 0, c.SIZE[1] - 20))
         self.block_list.add(Block(1600, 20, 1700, c.SIZE[1] - 20))
-        self.block_list.add(Block(50, 200, 500, c.SIZE[1] - 250))
+        self.block_list.add(Block(50, 90, 500, c.SIZE[1] - 140))
         self.block_list.add(Block(50, 200, 100, c.SIZE[1] - 220))
         self.sprites_list = pg.sprite.Group()
         self.sprites_list.add(self.player)
@@ -42,19 +41,10 @@ class Game:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_q:
                     self.done = True
-                elif event.key == pg.K_LEFT:
-                    self.player.move_left()
-                elif event.key == pg.K_RIGHT:
-                    self.player.move_right()
-                elif event.key == pg.K_UP:
-                    self.player.jump()
+                else:
+                    self.player.handle_keydown(event.key)
             elif event.type == pg.KEYUP:
-                if event.key == pg.K_LEFT:
-                    self.player.move_left_stop()
-                elif event.key == pg.K_RIGHT:
-                    self.player.move_right_stop()
-                elif event.key == pg.K_UP:
-                    self.player.jump_stop()
+                self.player.handle_keyup(event.key)
 
         screen.fill(c.BACKGROUND_COLOR)
         self.sprites_list.update()
