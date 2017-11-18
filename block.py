@@ -4,8 +4,11 @@ import color as col
 
 
 class Block(pg.sprite.Sprite):
-    def __init__(self, width, height, x, y):
+    def __init__(self, game, width, height, x, y):
         super().__init__()
+        self.game = game
+        self.game.block_list.add(self)
+        self.game.sprites_list.add(self)
         self.width = width
         self.height = height
         self.image = pg.Surface([width, height])

@@ -8,14 +8,15 @@ class Player(pg.sprite.Sprite):
     def __init__(self, game, number):
         super().__init__()
         self.game = game
+        self.game.sprites_list.add(self)
         self.number = number
         self.width = 20
         self.height = 30
         self.image = pg.Surface([self.width, self.height])
         self.rect = self.image.get_rect()
-        self.bottom = c.SIZE[1] - self.height
-        self.middle = c.SIZE[0] // 2
-        self.rect.x = c.SIZE[0] // 2
+        self.bottom = self.game.config.SIZE[1] - self.height
+        self.middle = self.game.config.SIZE[0] // 2
+        self.rect.x = self.game.config.SIZE[0] // 2
         self.rect.y = self.bottom - 200
         self.v = [0, 0]
         self.a = [0, 0]
@@ -115,24 +116,23 @@ class Player(pg.sprite.Sprite):
             self.v[0] = 0
             self.rect.x = 0
         elif self.rect.x > self.middle:
-            self.rect.x -= self.v[0]
-            for block in self.game.block_list:
+            for block in self.game.sprites_list:
                 block.rect.x -= self.v[0]
-                if block.rect.right < 0:
+                if block.rect.right < -self.game.config.SIZE[1] // 2:
                     block.kill()
         if self.shooting > 0:
             self.shooting -= 1
         elif self.shooting == 0:
             self.shooting = self.shooting_frequency
-            self.game.sprites_list.add(
-                Bullet(self.game, 10, 10, 10, self.rect.centerx - 5, self.rect.centery - 5, self.shoot_direction()))
+            self.game.bullets_list.add(
+                Bullet(self.game, 10, 10, 10, 1, self.rect.centerx - 5, self.rect.centery - 5, self.shoot_direction()))
         elif self.shooting < -1:
             self.shooting += 1
         print("x:{};y:{};v_x:{:.2f};v_y:{:.2f};a_x:{};a_y:{}".format(self.rect.x, self.rect.y, self.v[0], self.v[1],
                                                                      self.a[0], self.a[1]))
 
     def jump(self):
-        x_diff = -self.v[0] * c.JUMP_PRECISION
+        x_diff = -self.v[0] * self.game.config.JUMP_PRECISION
         self.rect.x += x_diff
         self.rect.y += 1
         if pg.sprite.spritecollide(self, self.game.block_list, False):
@@ -189,29 +189,29 @@ class Player(pg.sprite.Sprite):
         self.v = [0, 0]
 
     def handle_keydown(self, key):
-        if key == c.KEY_LEFT[self.number]:
+        if key == self.game.config.KEY_LEFT[self.number]:
             self.move_left()
-        elif key == c.KEY_RIGHT[self.number]:
+        elif key == self.game.config.KEY_RIGHT[self.number]:
             self.move_right()
-        elif key == c.KEY_DOWN[self.number]:
+        elif key == self.game.config.KEY_DOWN[self.number]:
             self.look_down()
-        elif key == c.KEY_UP[self.number]:
+        elif key == self.game.config.KEY_UP[self.number]:
             self.look_up()
-        elif key == c.KEY_JUMP[self.number]:
+        elif key == self.game.config.KEY_JUMP[self.number]:
             self.jump()
-        elif key == c.KEY_SHOOT[self.number]:
+        elif key == self.game.config.KEY_SHOOT[self.number]:
             self.shoot()
 
     def handle_keyup(self, key):
-        if key == c.KEY_LEFT[self.number]:
+        if key == self.game.config.KEY_LEFT[self.number]:
             self.move_left_stop()
-        elif key == c.KEY_RIGHT[self.number]:
+        elif key == self.game.config.KEY_RIGHT[self.number]:
             self.move_right_stop()
-        elif key == c.KEY_DOWN[self.number]:
+        elif key == self.game.config.KEY_DOWN[self.number]:
             self.look_down_stop()
-        elif key == c.KEY_UP[self.number]:
+        elif key == self.game.config.KEY_UP[self.number]:
             self.look_up_stop()
-        elif key == c.KEY_JUMP[self.number]:
+        elif key == self.game.config.KEY_JUMP[self.number]:
             self.jump_stop()
-        elif key == c.KEY_SHOOT[self.number]:
+        elif key == self.game.config.KEY_SHOOT[self.number]:
             self.shoot_stop()
