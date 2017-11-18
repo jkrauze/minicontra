@@ -7,11 +7,11 @@ class Config:
     def __init__(self):
         self.file = 'settings.cfg'
         self.section = 'main'
+        self.JUMP_PRECISION = 1.2
         self.NAME = 'minicontra'
         self.SIZE = [800, 600]
         self.TICK = 60
         self.BACKGROUND_COLOR = col.BLACK
-        self.JUMP_PRECISION = 1.2
         self.KEY_UP = pg.K_UP, pg.K_w
         self.KEY_LEFT = pg.K_LEFT, pg.K_a
         self.KEY_DOWN = pg.K_DOWN, pg.K_s
@@ -27,7 +27,6 @@ class Config:
         self.SIZE = eval(self.config.get(self.section, 'size'))
         self.TICK = self.config.getint(self.section, 'tick')
         self.BACKGROUND_COLOR = eval(self.config.get(self.section, 'background_color'))
-        self.JUMP_PRECISION = self.config.getfloat(self.section, 'jump_precision')
         self.KEY_UP = eval(self.config.get(self.section, 'key_up'))
         self.KEY_LEFT = eval(self.config.get(self.section, 'key_left'))
         self.KEY_DOWN = eval(self.config.get(self.section, 'key_down'))

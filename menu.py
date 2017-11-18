@@ -25,7 +25,7 @@ class Menu:
             if event.type == pg.QUIT:
                 self.done = True
             elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_RETURN:
+                if event.key == pg.K_RETURN or event.key == pg.K_SPACE:
                     self.done = True
                 elif event.key == pg.K_UP:
                     self.choose = (self.choose - 1) % len(self.options)

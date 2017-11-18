@@ -25,6 +25,10 @@ class Level:
     def run(self):
         while not self.done:
             self.tick()
+        self.game.block_list.empty()
+        self.game.player_bullets_list.empty()
+        self.game.enemies_list.empty()
+        self.game.sprites_list.empty()
 
     def tick(self):
         for event in pg.event.get():

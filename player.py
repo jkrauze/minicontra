@@ -134,8 +134,6 @@ class Player(pg.sprite.Sprite):
                 Bullet(self.game, 10, 10, 10, 1, self.rect.centerx - 5, self.rect.centery - 5, self.shoot_direction()))
         elif self.shooting < -1:
             self.shooting += 1
-        print("x:{};y:{};v_x:{:.2f};v_y:{:.2f};a_x:{};a_y:{}".format(self.rect.x, self.rect.y, self.v[0], self.v[1],
-                                                                     self.a[0], self.a[1]))
 
     def jump(self):
         x_diff = -self.v[0] * self.game.config.JUMP_PRECISION
