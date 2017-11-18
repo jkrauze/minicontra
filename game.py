@@ -25,8 +25,11 @@ class Game:
             if option == 0:
                 while not self.done:
                     self.actual_level = Level(self, "lvl/1.lvl")
-                    self.actual_level.run()
-                    option = Menu(self, "Game Over", ["Try again", "Return to menu", "Exit game"]).run()
+                    option = self.actual_level.run()
+                    if option == 0:
+                        option = Menu(self, "Game Over", ["Try again", "Return to menu", "Exit game"]).run()
+                    else:
+                        option -= 1
                     if option == 1:
                         break
                     elif option == 2:
