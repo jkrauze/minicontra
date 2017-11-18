@@ -92,7 +92,6 @@ class Enemy(pg.sprite.Sprite):
 
         if collides:
             floor = (collides[0].rect.left, collides[0].rect.right)
-            print(floor)
             if self.rect.x <= floor[0]:
                 self.rect.x = floor[0]
                 self.v = [-1, 0]

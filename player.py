@@ -14,10 +14,9 @@ class Player(pg.sprite.Sprite):
         self.height = 30
         self.image = pg.Surface([self.width, self.height])
         self.rect = self.image.get_rect()
-        self.bottom = self.game.config.SIZE[1] - self.height
-        self.middle = self.game.config.SIZE[0] // 2
+        self.screen_middle = self.game.config.SIZE[0] // 2
         self.rect.x = self.game.config.SIZE[0] // 2
-        self.rect.y = self.bottom - 200
+        self.rect.y = self.game.config.SIZE[1] - 200
         self.v = [0, 0]
         self.a = [0, 0]
         self.v_max = 4
@@ -65,8 +64,11 @@ class Player(pg.sprite.Sprite):
         self.rect.y += 1
         collides = pg.sprite.spritecollide(self, self.game.block_list, False)
         self.rect.y -= 1
-        if way == 0 and collides:
-            self.a[0] = round(self.v[0] * -self.friction)
+        if way == 0:
+            if collides:
+                self.a[0] = round(self.v[0] * -self.friction)
+            else:
+                self.a[0] = 0
         elif way == -1:
             if collides:
                 self.a[0] = -3
@@ -111,11 +113,14 @@ class Player(pg.sprite.Sprite):
                 self.rect.y = collides_y[0].rect.bottom
             self.v[1] = 0
             self.a[1] = 0
+        if self.rect.y > self.game.config.SIZE[1]:
+            self.kill()
+            return
         if self.rect.x < 0:
             self.a[0] = 0
             self.v[0] = 0
             self.rect.x = 0
-        elif self.rect.x > self.middle:
+        elif self.rect.x > self.screen_middle:
             for block in self.game.sprites_list:
                 block.rect.x -= self.v[0]
                 if block.rect.right < -self.game.config.SIZE[1] // 2:
@@ -124,7 +129,7 @@ class Player(pg.sprite.Sprite):
             self.shooting -= 1
         elif self.shooting == 0:
             self.shooting = self.shooting_frequency
-            self.game.bullets_list.add(
+            self.game.player_bullets_list.add(
                 Bullet(self.game, 10, 10, 10, 1, self.rect.centerx - 5, self.rect.centery - 5, self.shoot_direction()))
         elif self.shooting < -1:
             self.shooting += 1
