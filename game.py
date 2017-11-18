@@ -1,9 +1,7 @@
 import pygame as pg
 import config as c
 from player import Player
-from block import Block
-from enemy import Enemy
-
+from level import Level
 
 class Game:
     def __init__(self):
@@ -17,16 +15,8 @@ class Game:
         self.enemies_list = pg.sprite.Group()
         self.sprites_list = pg.sprite.Group()
 
+        self.level = Level(self, "lvl/1.lvl")
         self.player = Player(self, 0)
-        Block(self, 100, 20, 180, self.config.SIZE[1] - 150)
-        Block(self, 100, 20, 280, self.config.SIZE[1] - 120)
-        Block(self, 1600, 20, 0, self.config.SIZE[1] - 20)
-        Block(self, 1600, 20, 1700, self.config.SIZE[1] - 20)
-        Block(self, 50, 90, 500, self.config.SIZE[1] - 140)
-        Block(self, 50, 200, 100, self.config.SIZE[1] - 220)
-        Enemy(self, 3, 100, 200)
-        Enemy(self, 1, 200, 200)
-        Enemy(self, 1, 290, 200)
         self.done = False
         self.clock = pg.time.Clock()
         self.skip = False
