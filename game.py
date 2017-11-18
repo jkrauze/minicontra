@@ -1,6 +1,7 @@
 import pygame as pg
 import config as c
 from level import Level
+from menu import Menu
 
 
 class Game:
@@ -14,10 +15,22 @@ class Game:
         self.player_bullets_list = pg.sprite.Group()
         self.enemies_list = pg.sprite.Group()
         self.sprites_list = pg.sprite.Group()
+        self.actual_level = None
 
-        self.level = Level(self, "lvl/1.lvl")
         self.done = False
 
     def run(self):
-        self.level.run()
+        while not self.done:
+            option = Menu(self, "minicontra", ["Single player", "Two players", "Options", "Exit"]).run()
+            if option == 0:
+                while not self.done:
+                    self.actual_level = Level(self, "lvl/1.lvl")
+                    self.actual_level.run()
+                    option = Menu(self, "Game Over", ["Try again", "Return to menu", "Exit game"]).run()
+                    if option == 1:
+                        break
+                    elif option == 2:
+                        self.done = True
+            elif option == 3:
+                break
         pg.quit()

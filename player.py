@@ -114,6 +114,7 @@ class Player(pg.sprite.Sprite):
             self.v[1] = 0
             self.a[1] = 0
         if self.rect.y > self.game.config.SIZE[1]:
+            self.game.actual_level.done = True
             self.kill()
             return
         if self.rect.x < 0:
