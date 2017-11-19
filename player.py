@@ -2,6 +2,8 @@ import pygame as pg
 import config as c
 import color as col
 from bullet import Bullet
+from block import Block
+from platform import Platform
 
 
 class Player(pg.sprite.Sprite):
@@ -66,23 +68,24 @@ class Player(pg.sprite.Sprite):
         self.rect.y += 1
         collides = pg.sprite.spritecollide(self, self.game.block_list, False)
         self.rect.y -= 1
+        going_through = pg.sprite.spritecollide(self, self.game.block_list, False)
         if way == 0:
-            if collides:
+            if collides and not going_through:
                 self.a[0] = round(self.v[0] * -self.friction)
             else:
                 self.a[0] = 0
         elif way == -1:
-            if collides:
+            if collides and not going_through:
                 self.a[0] = -3
             else:
                 self.a[0] = -1
         elif way == 1:
-            if collides:
+            if collides and not going_through:
                 self.a[0] = 3
             else:
                 self.a[0] = 1
 
-        if not collides:
+        if not collides or going_through:
             self.a[1] = 1
         else:
             self.a[1] = 0
@@ -99,7 +102,7 @@ class Player(pg.sprite.Sprite):
 
         self.rect.x += self.v[0]
         collides_x = pg.sprite.spritecollide(self, self.game.block_list, False)
-        if collides_x:
+        if collides_x and isinstance(collides_x[0], Block):
             if self.v[0] > 0:
                 self.rect.right = collides_x[0].rect.left
             else:
@@ -109,12 +112,14 @@ class Player(pg.sprite.Sprite):
         self.rect.y += self.v[1]
         collides_y = pg.sprite.spritecollide(self, self.game.block_list, False)
         if collides_y:
-            if self.v[1] > 0:
+            if self.v[1] > 0 and (not going_through or collides_y[0] not in going_through) and collides_y[0] not in collides_x:
                 self.rect.y = collides_y[0].rect.top - self.height
-            else:
+                self.v[1] = 0
+                self.a[1] = 0
+            elif isinstance(collides_y[0], Block):
                 self.rect.y = collides_y[0].rect.bottom
-            self.v[1] = 0
-            self.a[1] = 0
+                self.v[1] = 0
+                self.a[1] = 0
         if self.rect.y > self.game.config.SIZE[1]:
             self.game.actual_level.done = True
             self.kill()
@@ -142,7 +147,7 @@ class Player(pg.sprite.Sprite):
         else:
             self.image.set_alpha(255)
 
-    def hurt(self,hp):
+    def hurt(self, hp):
         if self.recovering > 0:
             return
         self.hp = max(self.hp - hp, 0)
@@ -202,7 +207,10 @@ class Player(pg.sprite.Sprite):
             self.shooting = 0
 
     def shoot_stop(self):
-        self.shooting = -self.shooting
+        if self.shooting > 0:
+            self.shooting = -self.shooting
+        elif self.shooting == 0:
+            self.shooting = -1
 
     def stop(self):
         self.shooting = -1
