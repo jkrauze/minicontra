@@ -43,6 +43,7 @@ class Level:
                     while not self.done:
                         option = Menu(self.game, "Paused", ["Resume", "Restart", "Return to menu", "Exit game"]).run()
                         if option == 0:
+                            self.player.stop()
                             break
                         self.done = True
                         self.return_state = option
@@ -55,10 +56,16 @@ class Level:
         self.game.screen.fill(self.game.config.BACKGROUND_COLOR)
         self.game.sprites_list.update()
         self.game.sprites_list.draw(self.game.screen)
+        self.handle_enemy_touch()
         self.handle_shooting()
 
         pg.display.flip()
         self.clock.tick(self.game.config.TICK)
+
+    def handle_enemy_touch(self):
+        enemies = pg.sprite.spritecollide(self.player, self.game.enemies_list, False)
+        if enemies:
+            self.player.hurt(1)
 
     def handle_shooting(self):
         for enemy in self.game.enemies_list:

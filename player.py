@@ -12,6 +12,7 @@ class Player(pg.sprite.Sprite):
         self.number = number
         self.width = 20
         self.height = 30
+        self.hp = 3
         self.image = pg.Surface([self.width, self.height])
         self.rect = self.image.get_rect()
         self.screen_middle = self.game.config.SIZE[0] // 2
@@ -29,6 +30,7 @@ class Player(pg.sprite.Sprite):
         self.looking_up = False
         self.looking_down = False
         self.shooting = -1
+        self.recovering = 0
         self.last_move = 1
         self.last_look = 0
 
@@ -134,6 +136,20 @@ class Player(pg.sprite.Sprite):
                 Bullet(self.game, 10, 10, 10, 1, self.rect.centerx - 5, self.rect.centery - 5, self.shoot_direction()))
         elif self.shooting < -1:
             self.shooting += 1
+        if self.recovering > 0:
+            self.recovering -= 1
+            self.image.set_alpha(125)
+        else:
+            self.image.set_alpha(255)
+
+    def hurt(self,hp):
+        if self.recovering > 0:
+            return
+        self.hp = max(self.hp - hp, 0)
+        self.recovering = 180
+        if self.hp == 0:
+            self.game.actual_level.done = True
+            self.kill()
 
     def jump(self):
         x_diff = -self.v[0] * self.game.config.JUMP_PRECISION
@@ -189,8 +205,12 @@ class Player(pg.sprite.Sprite):
         self.shooting = -self.shooting
 
     def stop(self):
-        self.a = [0, 0]
-        self.v = [0, 0]
+        self.shooting = -1
+        self.moving_right = False
+        self.moving_left = False
+        self.looking_up = False
+        self.looking_down = False
+        self.a[0] = 0
 
     def handle_keydown(self, key):
         if key == self.game.config.KEY_LEFT[self.number]:
