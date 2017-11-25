@@ -14,4 +14,4 @@ class Platform(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.over_image = Image(self.game, self.game.ground_sprite.subsurface((2 * 32, 0, 32, 32)), x, y - 32)
+        self.over_image = Image(self.game, self.game.ground_sprite.subsurface((2 * 32, 0, 32, 32)), x, y - 20)
