@@ -11,7 +11,7 @@ class Config:
         self.NAME = 'minicontra'
         self.SIZE = [640, 480]
         self.TICK = 60
-        self.BACKGROUND_COLOR = col.BLACK
+        self.BACKGROUND_COLOR = (5, 5, 30)
         self.KEY_UP = pg.K_UP, pg.K_w
         self.KEY_LEFT = pg.K_LEFT, pg.K_a
         self.KEY_DOWN = pg.K_DOWN, pg.K_s
@@ -26,7 +26,6 @@ class Config:
         self.NAME = self.config.get(self.section, 'name')
         self.SIZE = eval(self.config.get(self.section, 'size'))
         self.TICK = self.config.getint(self.section, 'tick')
-        self.BACKGROUND_COLOR = eval(self.config.get(self.section, 'background_color'))
         self.KEY_UP = eval(self.config.get(self.section, 'key_up'))
         self.KEY_LEFT = eval(self.config.get(self.section, 'key_left'))
         self.KEY_DOWN = eval(self.config.get(self.section, 'key_down'))
