@@ -133,33 +133,39 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         way = self.direction_x()
-        self.rect.y += 1
-        collides = pg.sprite.spritecollide(self, self.game.block_list, False)
-        self.on_ground = bool(collides)
-        self.rect.y -= 1
+        diff = max(1, self.v[1])
+        self.rect.y += diff
+        standing = pg.sprite.spritecollide(self, self.game.block_list, False)
+        self.on_ground = bool(standing)
+        self.rect.y -= diff
         going_through = pg.sprite.spritecollide(self, self.game.block_list, False)
+        for elem in going_through:
+            try:
+                standing.remove(elem)
+            except ValueError:
+                pass
         if way == 0:
-            if collides and not going_through:
+            if standing:
                 self.a[0] = round(self.v[0] * -self.friction)
             else:
                 self.a[0] = 0
         elif way == -1:
-            if collides and not going_through:
+            if standing:
                 self.a[0] = -3
             else:
                 self.a[0] = -1
         elif way == 1:
-            if collides and not going_through:
+            if standing:
                 self.a[0] = 3
             else:
                 self.a[0] = 1
 
-        if not collides or going_through:
+        if not standing:
             self.a[1] = 1
         else:
             self.a[1] = 0
             if self.v[1] > 0:
-                self.rect.y = collides[0].rect.top - self.height
+                self.rect.y = standing[0].rect.top - self.height
                 self.v[1] = 0
 
         self.v[0] += self.a[0]
@@ -228,10 +234,17 @@ class Player(pg.sprite.Sprite):
             self.kill()
 
     def jump(self):
+        collides = pg.sprite.spritecollide(self, self.game.block_list, False)
         x_diff = -self.v[0] * self.game.config.JUMP_PRECISION
         self.rect.x += x_diff
         self.rect.y += 1
-        if pg.sprite.spritecollide(self, self.game.block_list, False):
+        standing_on = pg.sprite.spritecollide(self, self.game.block_list, False)
+        for elem in collides:
+            try:
+                standing_on.remove(elem)
+            except ValueError:
+                pass
+        if standing_on:
             self.a[1] = 0
             self.v[1] = -15
         self.rect.x -= x_diff
