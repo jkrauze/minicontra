@@ -7,26 +7,25 @@ from platform import Platform
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, game, number):
+    def __init__(self, game, number, x, y):
         super().__init__()
         self.game = game
         self.game.sprites_list.add(self)
+        self.game.players_list.add(self)
         self.number = number
-        self.width = 20
-        self.height = 30
+        self.width = 50
+        self.height = 50
         self.hp = 3
-        self.image = pg.Surface([self.width, self.height])
+        self.image = self.game.player_sprite.subsurface((24, 143, 50, 50))
         self.rect = self.image.get_rect()
         self.screen_middle = self.game.config.SIZE[0] // 2
-        self.rect.x = self.game.config.SIZE[0] // 2
-        self.rect.y = self.game.config.SIZE[1] - 200
+        self.rect.x = x
+        self.rect.y = y
         self.v = [0, 0]
         self.a = [0, 0]
         self.v_max = 4
         self.friction = 0.51
         self.shooting_frequency = 10
-        self.color = col.GREEN
-        self.image.fill(self.color)
         self.moving_left = False
         self.moving_right = False
         self.looking_up = False
@@ -35,6 +34,8 @@ class Player(pg.sprite.Sprite):
         self.recovering = 0
         self.last_move = 1
         self.last_look = 0
+        self.run_animation = 0
+        self.on_ground = False
 
     def direction_x(self):
         way = 0
@@ -63,10 +64,78 @@ class Player(pg.sprite.Sprite):
             x = self.last_move
         return x, y
 
+    def set_image(self):
+        actual_midbottom = self.rect.midbottom
+        x_move = self.direction_x()
+        y_move = self.direction_y()
+        if not self.on_ground:
+            if x_move == 0 and y_move != 0:
+                if self.last_move == 1:
+                    if y_move == -1:
+                        self.image = self.game.player_sprite.subsurface((137, 683, 50, 50))
+                    else:
+                        self.image = self.game.player_sprite.subsurface((137, 746, 50, 50))
+                else:
+                    if y_move == -1:
+                        self.image = self.game.player_sprite.subsurface((193, 683, 50, 50))
+                    else:
+                        self.image = self.game.player_sprite.subsurface((193, 746, 50, 50))
+            elif x_move == 1 or self.last_move == 1:
+                if y_move == 0:
+                    self.image = self.game.player_sprite.subsurface((126, 143, 50, 50))
+                elif y_move == -1:
+                    self.image = self.game.player_sprite.subsurface((331, 925, 50, 50))
+                else:
+                    self.image = self.game.player_sprite.subsurface((760, 925, 50, 50))
+            else:
+                if y_move == 0:
+                    self.image = self.game.player_sprite.subsurface((126, 200, 50, 50))
+                elif y_move == -1:
+                    self.image = self.game.player_sprite.subsurface((331, 1063, 50, 50))
+                else:
+                    self.image = self.game.player_sprite.subsurface((760, 1063, 50, 50))
+            self.run_animation = 0
+        elif x_move == 0:
+            if self.last_move == 1:
+                if y_move == 0:
+                    self.image = self.game.player_sprite.subsurface((24, 143, 50, 50))
+                elif y_move == -1:
+                    self.image = self.game.player_sprite.subsurface((137, 683, 50, 50))
+                else:
+                    self.image = self.game.player_sprite.subsurface((137, 746, 50, 50))
+            else:
+                if y_move == 0:
+                    self.image = self.game.player_sprite.subsurface((24, 200, 50, 50))
+                elif y_move == -1:
+                    self.image = self.game.player_sprite.subsurface((193, 683, 50, 50))
+                else:
+                    self.image = self.game.player_sprite.subsurface((193, 746, 50, 50))
+            self.run_animation = 0
+        else:
+            if x_move == 1:
+                if y_move == 0:
+                    self.image = self.game.player_sprite.subsurface((24 + 51 * (self.run_animation // 3), 315, 50, 50))
+                elif y_move == -1:
+                    self.image = self.game.player_sprite.subsurface((25 + 51 * (self.run_animation // 3), 932, 50, 50))
+                else:
+                    self.image = self.game.player_sprite.subsurface((454 + 51 * (self.run_animation // 3), 932, 50, 50))
+            else:
+                if y_move == 0:
+                    self.image = self.game.player_sprite.subsurface((24 + 51 * (self.run_animation // 3), 375, 50, 50))
+                elif y_move == -1:
+                    self.image = self.game.player_sprite.subsurface((25 + 51 * (self.run_animation // 3), 1070, 50, 50))
+                else:
+                    self.image = self.game.player_sprite.subsurface(
+                        (454 + 51 * (self.run_animation // 3), 1070, 50, 50))
+            self.run_animation = (self.run_animation + 1) % 24
+        self.rect = self.image.get_rect()
+        self.rect.midbottom = actual_midbottom
+
     def update(self):
         way = self.direction_x()
         self.rect.y += 1
         collides = pg.sprite.spritecollide(self, self.game.block_list, False)
+        self.on_ground = bool(collides)
         self.rect.y -= 1
         going_through = pg.sprite.spritecollide(self, self.game.block_list, False)
         if way == 0:
@@ -112,7 +181,8 @@ class Player(pg.sprite.Sprite):
         self.rect.y += self.v[1]
         collides_y = pg.sprite.spritecollide(self, self.game.block_list, False)
         if collides_y:
-            if self.v[1] > 0 and (not going_through or collides_y[0] not in going_through) and collides_y[0] not in collides_x:
+            if self.v[1] > 0 and (not going_through or collides_y[0] not in going_through) and collides_y[
+                0] not in collides_x:
                 self.rect.y = collides_y[0].rect.top - self.height
                 self.v[1] = 0
                 self.a[1] = 0
@@ -141,9 +211,10 @@ class Player(pg.sprite.Sprite):
                 Bullet(self.game, 10, 10, 10, 1, self.rect.centerx - 5, self.rect.centery - 5, self.shoot_direction()))
         elif self.shooting < -1:
             self.shooting += 1
+        self.set_image()
         if self.recovering > 0:
             self.recovering -= 1
-            self.image.set_alpha(125)
+            self.image.set_alpha(100)
         else:
             self.image.set_alpha(255)
 

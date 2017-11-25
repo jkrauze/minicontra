@@ -15,6 +15,9 @@ class Game:
         self.ground_sprite.set_colorkey(self.ground_sprite.get_at((17,1)))
         self.ground_sprite = pg.transform.scale2x(self.ground_sprite)
 
+        self.player_sprite = pg.image.load('img/OpenGunnerHeroVer2.png').convert()
+        self.player_sprite.set_colorkey(self.player_sprite.get_at((1,1)))
+
         self.block_list = pg.sprite.Group()
         self.player_bullets_list = pg.sprite.Group()
         self.enemies_list = pg.sprite.Group()
