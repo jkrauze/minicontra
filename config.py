@@ -9,7 +9,7 @@ class Config:
         self.section = 'main'
         self.JUMP_PRECISION = 1.2
         self.NAME = 'minicontra'
-        self.SIZE = [800, 600]
+        self.SIZE = [640, 480]
         self.TICK = 60
         self.BACKGROUND_COLOR = col.BLACK
         self.KEY_UP = pg.K_UP, pg.K_w

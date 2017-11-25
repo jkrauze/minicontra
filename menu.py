@@ -40,9 +40,9 @@ class Menu:
 
     def draw(self):
         self.game.screen.blit(
-            pg.font.Font(self.font, 60).render(self.title, 1, self.font_color_title), (100, 100))
+            pg.font.Font(self.font, 40).render(self.title, 1, self.font_color_title), (50, 50))
         for i in range(len(self.options)):
             self.game.screen.blit(
-                pg.font.Font(self.font, 30).render(self.options[i], 1,
+                pg.font.Font(self.font, 20).render(self.options[i], 1,
                                                       self.font_color if i != self.choose else self.font_color_choosed),
-                (100, 200 + 80 * i))
+                (50, 200 + 60 * i))

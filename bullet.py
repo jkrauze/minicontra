@@ -1,6 +1,7 @@
 import pygame as pg
 import config as c
 import color as col
+from block import Block
 
 
 class Bullet(pg.sprite.Sprite):
@@ -30,5 +31,6 @@ class Bullet(pg.sprite.Sprite):
         if self.rect.y < 0 or self.rect.y > self.game.config.SIZE[1]:
             self.kill()
             return
-        if pg.sprite.spritecollide(self, self.game.block_list, False):
+        collides = pg.sprite.spritecollide(self, self.game.block_list, False)
+        if collides and isinstance(collides[0], Block):
             self.kill()

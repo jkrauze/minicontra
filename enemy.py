@@ -10,8 +10,8 @@ class Enemy(pg.sprite.Sprite):
         self.game.enemies_list.add(self)
         self.game.sprites_list.add(self)
         self.hp = hp
-        self.width = 20
-        self.height = 30
+        self.width = 32
+        self.height = 32
         self.image = pg.Surface([self.width, self.height])
         self.rect = self.image.get_rect()
         self.bottom = self.game.config.SIZE[1] - self.height
@@ -91,14 +91,21 @@ class Enemy(pg.sprite.Sprite):
             self.a[1] = 0
 
         if collides:
-            floor = (collides[0].rect.left, collides[0].rect.right)
-            if self.rect.x <= floor[0]:
-                self.rect.x = floor[0]
-                self.v = [-1, 0]
-                self.a = [0, 0]
-                self.moving_right, self.moving_left = True, False
-            elif self.rect.x >= floor[1] - self.width:
-                self.rect.x = floor[1] - self.width
-                self.v = [1, 0]
-                self.a = [0, 0]
-                self.moving_right, self.moving_left = False, True
+            way = self.direction_x()
+            self.rect.x += way
+            self.rect.y += 1
+            collides = pg.sprite.spritecollide(self, self.game.block_list, False)
+            self.rect.y -= 1
+            self.rect.x -= way
+            if len(collides) == 1:
+                floor = (collides[0].rect.left, collides[0].rect.right)
+                if self.rect.x <= floor[0]:
+                    self.rect.x = floor[0]
+                    self.v = [-1, 0]
+                    self.a = [0, 0]
+                    self.moving_right, self.moving_left = True, False
+                elif self.rect.x >= floor[1] - self.width:
+                    self.rect.x = floor[1] - self.width
+                    self.v = [1, 0]
+                    self.a = [0, 0]
+                    self.moving_right, self.moving_left = False, True

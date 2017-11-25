@@ -11,9 +11,14 @@ class Game:
         self.screen = pg.display.set_mode(self.config.SIZE)
         pg.display.set_caption(self.config.NAME)
 
+        self.ground_sprite = pg.image.load('img/ground3T.png')
+        self.ground_sprite.set_colorkey(self.ground_sprite.get_at((17,1)))
+        self.ground_sprite = pg.transform.scale2x(self.ground_sprite)
+
         self.block_list = pg.sprite.Group()
         self.player_bullets_list = pg.sprite.Group()
         self.enemies_list = pg.sprite.Group()
+        self.players_list = pg.sprite.Group()
         self.sprites_list = pg.sprite.Group()
         self.actual_level = None
 

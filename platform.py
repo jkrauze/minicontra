@@ -1,4 +1,5 @@
 import pygame as pg
+from image import Image
 
 
 class Platform(pg.sprite.Sprite):
@@ -9,9 +10,8 @@ class Platform(pg.sprite.Sprite):
         self.game.sprites_list.add(self)
         self.width = width
         self.height = height
-        self.image = pg.Surface([width, height])
+        self.image = self.game.ground_sprite.subsurface((0, 0, 32, 32))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.color = (100, 100, 0)
-        self.image.fill(self.color)
+        self.over_image = Image(self.game, self.game.ground_sprite.subsurface((2 * 32, 0, 32, 32)), x, y - 32)

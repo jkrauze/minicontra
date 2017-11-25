@@ -9,22 +9,20 @@ from menu import Menu
 
 
 class Level:
-    def __init__(self, game, file):
+    def __init__(self, game, file_path):
         self.game = game
-        self.file = file
-        self.section = 'level'
-        self.config = configparser.RawConfigParser()
-        self.config.read(self.file)
-        self.blocks = eval(self.config.get(self.section, 'blocks'))
-        self.platorms = eval(self.config.get(self.section, 'platforms'))
-        self.enemies = eval(self.config.get(self.section, 'enemies'))
-        for block in self.blocks:
-            Block(self.game, block[0], block[1], block[2], block[3])
-        for platform in self.platorms:
-            Platform(self.game, platform[0], platform[1], platform[2], platform[3])
-        for enemy in self.enemies:
-            Enemy(self.game, enemy[0], enemy[1], enemy[2])
-        self.player = Player(self.game, 0)
+        self.file_path = file_path
+        with open(file_path, 'r') as file:
+            for line_num, line in enumerate(file, 0):
+                for pos, char in enumerate(line, 0):
+                    if char == 'b':
+                        Block(self.game, 32, 32, 32 * pos, 32 * line_num)
+                    elif char == 'p':
+                        Platform(self.game, 32, 32, 32 * pos, 32 * line_num)
+                    elif char == 'e':
+                        Enemy(self.game, 1, 32 * pos, 32 * line_num)
+                    elif char == 'x':
+                        self.player = Player(self.game, 0, 32 * pos, 32 * line_num)
         self.done = False
         self.return_state = 0
         self.clock = pg.time.Clock()
@@ -46,7 +44,6 @@ class Level:
     def tick(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                print("quit")
                 self.done = True
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
@@ -66,6 +63,8 @@ class Level:
         self.game.screen.fill(self.game.config.BACKGROUND_COLOR)
         self.game.sprites_list.update()
         self.game.sprites_list.draw(self.game.screen)
+        self.game.enemies_list.draw(self.game.screen)
+        self.game.players_list.draw(self.game.screen)
         self.handle_enemy_touch()
         self.handle_shooting()
         self.draw_hud()

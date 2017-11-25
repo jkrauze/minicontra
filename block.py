@@ -1,6 +1,5 @@
 import pygame as pg
-import config as c
-import color as col
+from image import Image
 
 
 class Block(pg.sprite.Sprite):
@@ -11,9 +10,8 @@ class Block(pg.sprite.Sprite):
         self.game.sprites_list.add(self)
         self.width = width
         self.height = height
-        self.image = pg.Surface([width, height])
+        self.image = self.game.ground_sprite.subsurface((0, 6 * 32, 32, 32))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.color = col.WHITE
-        self.image.fill(self.color)
+        self.over_image = Image(self.game, self.game.ground_sprite.subsurface((2 * 32, 6 * 32, 32, 32)), x, y - 32)
