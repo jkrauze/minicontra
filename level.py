@@ -33,12 +33,16 @@ class Level:
             elem.set_colorkey(col.BLACK)
 
     def run(self):
+        pg.mixer.music.load('snd/game.ogg')
+        pg.mixer.music.play(-1)
         while not self.done:
             self.tick()
+        pg.mixer.music.stop()
         self.game.block_list.empty()
         self.game.player_bullets_list.empty()
         self.game.enemies_list.empty()
         self.game.sprites_list.empty()
+        self.game.players_list.empty()
         return self.return_state
 
     def tick(self):
@@ -48,9 +52,12 @@ class Level:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     while not self.done:
-                        option = Menu(self.game, "Paused", ["Resume", "Restart", "Return to menu", "Exit game"]).run()
+                        pg.mixer.music.pause()
+                        option = Menu(self.game, "Paused", ["Resume", "Restart", "Return to menu", "Exit game"],
+                                      0).run()
                         if option == 0:
                             self.player.stop()
+                            pg.mixer.music.unpause()
                             break
                         self.done = True
                         self.return_state = option

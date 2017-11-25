@@ -3,7 +3,7 @@ import color as col
 
 
 class Menu:
-    def __init__(self, game, title, options):
+    def __init__(self, game, title, options, esc_option):
         self.game = game
         self.font = 'font/8-BIT WONDER.TTF'
         self.font_color = col.WHITE
@@ -14,6 +14,7 @@ class Menu:
         self.choose = 0
         self.title = title
         self.options = options
+        self.esc_option = esc_option
 
     def run(self):
         while not self.done:
@@ -27,6 +28,10 @@ class Menu:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_RETURN or event.key == pg.K_SPACE:
                     self.done = True
+                elif event.key == pg.K_ESCAPE:
+                    if self.esc_option >= 0:
+                        self.choose = self.esc_option
+                        self.done = True
                 elif event.key == pg.K_UP:
                     self.choose = (self.choose - 1) % len(self.options)
                 elif event.key == pg.K_DOWN:
