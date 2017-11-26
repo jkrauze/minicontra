@@ -214,7 +214,9 @@ class Player(pg.sprite.Sprite):
         elif self.shooting == 0:
             self.shooting = self.shooting_frequency
             self.game.player_bullets_list.add(
-                Bullet(self.game, 10, 10, 10, 1, self.rect.centerx - 5, self.rect.centery - 5, self.shoot_direction()))
+                Bullet(self.game, 15, 15, 10, 1, self.rect.centerx - 6 * self.last_move,
+                       self.rect.centery - 6 - 8 * self.direction_y(),
+                       self.shoot_direction()))
         elif self.shooting < -1:
             self.shooting += 1
         self.set_image()
