@@ -19,6 +19,9 @@ class Game:
         self.player_sprite = pg.image.load('img/OpenGunnerHeroVer2.png').convert()
         self.player_sprite.set_colorkey(self.player_sprite.get_at((1, 1)))
 
+        self.enemy_sprite = pg.image.load('img/OpenGunnerEnemySoldier.png').convert()
+        self.enemy_sprite.set_colorkey(self.enemy_sprite.get_at((1, 1)))
+
         self.bullet_sprite = pg.image.load('img/M484BulletCollection2.png').convert()
         self.bullet_sprite.set_colorkey(self.bullet_sprite.get_at((1,1)))
 

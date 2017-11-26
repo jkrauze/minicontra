@@ -10,8 +10,8 @@ class Enemy(pg.sprite.Sprite):
         self.game.enemies_list.add(self)
         self.game.sprites_list.add(self)
         self.hp = hp
-        self.width = 32
-        self.height = 32
+        self.width = 50
+        self.height = 50
         self.image = pg.Surface([self.width, self.height])
         self.rect = self.image.get_rect()
         self.bottom = self.game.config.SIZE[1] - self.height
@@ -27,6 +27,7 @@ class Enemy(pg.sprite.Sprite):
         self.image.fill(self.color)
         self.moving_left = True
         self.moving_right = False
+        self.run_animation = 0
 
     def direction_x(self):
         way = 0
@@ -35,6 +36,13 @@ class Enemy(pg.sprite.Sprite):
         elif self.moving_right:
             way = 1
         return way
+
+    def set_image(self):
+        if self.direction_x() == 1:
+            self.image = self.game.enemy_sprite.subsurface((24 + 51 * (self.run_animation // 3), 286, 50, 50))
+        else:
+            self.image = self.game.enemy_sprite.subsurface((24 + 51 * (self.run_animation // 3), 346, 50, 50))
+        self.run_animation = (self.run_animation + 1) % 24
 
     def update(self):
         self.rect.y += 1
@@ -109,3 +117,5 @@ class Enemy(pg.sprite.Sprite):
                     self.v = [1, 0]
                     self.a = [0, 0]
                     self.moving_right, self.moving_left = False, True
+
+        self.set_image()

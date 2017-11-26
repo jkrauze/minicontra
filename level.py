@@ -20,9 +20,9 @@ class Level:
                     elif char == 'p':
                         Platform(self.game, 32, 32, 32 * pos, 32 * line_num)
                     elif char == 'e':
-                        Enemy(self.game, 1, 32 * pos, 32 * line_num)
+                        Enemy(self.game, 1, 32 * pos, 32 * line_num - 28)
                     elif char == 'x':
-                        self.player = Player(self.game, 0, 32 * pos, 32 * line_num)
+                        self.player = Player(self.game, 0, 32 * pos, 32 * line_num - 28)
         self.done = False
         self.return_state = 0
         self.clock = pg.time.Clock()
