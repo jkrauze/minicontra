@@ -46,6 +46,7 @@ class Level:
         while not self.done:
             self.tick()
         pg.mixer.music.stop()
+        self.game.background_list.empty()
         self.game.block_list.empty()
         self.game.player_bullets_list.empty()
         self.game.enemies_list.empty()
