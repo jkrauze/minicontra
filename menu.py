@@ -9,7 +9,7 @@ class Menu:
         self.font = 'font/8-BIT WONDER.TTF'
         self.font_color = col.WHITE
         self.font_color_choosed = col.RED
-        self.font_color_title = col.GREEN
+        self.font_color_title = col.BLUE
         self.done = False
         self.clock = pg.time.Clock()
         self.choose = 0
