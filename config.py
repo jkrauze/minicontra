@@ -12,7 +12,7 @@ class Config:
         self.file = 'settings.cfg'
         self.section = 'main'
         self.JUMP_PRECISION = 1.2
-        self.BACKGROUND_COLOR = (5, 5, 30)
+        self.BACKGROUND_COLOR = (5, 5, 50)
         self.KEY_UP = pg.K_UP, pg.K_w
         self.KEY_LEFT = pg.K_LEFT, pg.K_a
         self.KEY_DOWN = pg.K_DOWN, pg.K_s
