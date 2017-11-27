@@ -19,6 +19,7 @@ class Menu:
         self.background_rect = self.game.menu_background.get_rect()
         self.background_animation = 0
         self.background_animation_way = -1
+        self.is_main = title == Config.NAME
 
     def run(self):
         while not self.done:
@@ -42,7 +43,7 @@ class Menu:
                     self.choose = (self.choose + 1) % len(self.options)
 
         self.game.screen.fill(self.game.config.BACKGROUND_COLOR)
-        if self.esc_option == -1:
+        if self.is_main:
             self.game.screen.blit(self.game.menu_background, self.background_rect)
             self.background_animation += 1
             if self.background_animation == 10:

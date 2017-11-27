@@ -45,7 +45,7 @@ class Game:
         while not self.done:
             pg.mixer.music.load('snd/menu.ogg')
             pg.mixer.music.play(-1)
-            option = Menu(self, "minicontra", ["Single player", "Two players", "Options", "Exit"], -1).run()
+            option = Menu(self, self.config.NAME, ["Single player", "Two players", "Options", "Exit"], -1).run()
             if option == 0:
                 while not self.done:
                     pg.mixer.music.stop()
