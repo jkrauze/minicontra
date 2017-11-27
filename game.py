@@ -25,6 +25,10 @@ class Game:
         self.bullet_sprite = pg.image.load('img/M484BulletCollection2.png').convert()
         self.bullet_sprite.set_colorkey(self.bullet_sprite.get_at((1,1)))
 
+        self.background = pg.image.load('img/11-Mid-Night.png')
+        self.background.set_alpha(64)
+
+        self.background_list = pg.sprite.Group()
         self.block_list = pg.sprite.Group()
         self.player_bullets_list = pg.sprite.Group()
         self.enemies_list = pg.sprite.Group()

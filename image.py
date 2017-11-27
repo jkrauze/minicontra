@@ -10,3 +10,4 @@ class Image(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.game.sprites_list.add(self)
+        self.game.background_list.add(self)
