@@ -28,6 +28,9 @@ class Game:
         self.background = pg.image.load('img/11-Mid-Night.png')
         self.background.set_alpha(64)
 
+        self.menu_background = pg.image.load('img/01-Early-Morning.png')
+        self.menu_background.set_alpha(128)
+
         self.background_list = pg.sprite.Group()
         self.block_list = pg.sprite.Group()
         self.player_bullets_list = pg.sprite.Group()

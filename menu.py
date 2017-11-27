@@ -1,5 +1,6 @@
 import pygame as pg
 import color as col
+from config import Config
 
 
 class Menu:
@@ -15,6 +16,9 @@ class Menu:
         self.title = title
         self.options = options
         self.esc_option = esc_option
+        self.background_rect = self.game.menu_background.get_rect()
+        self.background_animation = 0
+        self.background_animation_way = -1
 
     def run(self):
         while not self.done:
@@ -38,6 +42,14 @@ class Menu:
                     self.choose = (self.choose + 1) % len(self.options)
 
         self.game.screen.fill(self.game.config.BACKGROUND_COLOR)
+        if self.esc_option == -1:
+            self.game.screen.blit(self.game.menu_background, self.background_rect)
+            self.background_animation += 1
+            if self.background_animation == 10:
+                self.background_animation = 0
+                self.background_rect.x += self.background_animation_way
+                if self.background_rect.x == 0 or -self.background_rect.x == 1280 - Config.SIZE[0]:
+                    self.background_animation_way = -self.background_animation_way
         self.draw()
 
         pg.display.flip()
@@ -49,5 +61,5 @@ class Menu:
         for i in range(len(self.options)):
             self.game.screen.blit(
                 pg.font.Font(self.font, 20).render(self.options[i], 1,
-                                                      self.font_color if i != self.choose else self.font_color_choosed),
+                                                   self.font_color if i != self.choose else self.font_color_choosed),
                 (50, 200 + 60 * i))
