@@ -1,19 +1,23 @@
 import pygame as pg
 import color as col
-import configparser
+from config import Config
 from block import Block
 from platform import Platform
 from enemy import Enemy
 from player import Player
 from menu import Menu
+from rock import Rock
 
 
 class Level:
     def __init__(self, game, file_path):
         self.game = game
         self.file_path = file_path
+        self.length = 0
         with open(file_path, 'r') as file:
             for line_num, line in enumerate(file, 0):
+                if len(line) > self.length:
+                    self.length = len(line)
                 for pos, char in enumerate(line, 0):
                     if char == 'b':
                         Block(self.game, 32, 32, 32 * pos, 32 * line_num)
@@ -23,6 +27,10 @@ class Level:
                         Enemy(self.game, 1, 32 * pos, 32 * line_num - 28)
                     elif char == 'x':
                         self.player = Player(self.game, 0, 32 * pos, 32 * line_num - 28)
+                    elif char == 'l':
+                        Rock(self.game, 32 * pos, 32 * line_num)
+        self.length *= 32
+        self.actual_length = self.player.rect.x
         self.done = False
         self.return_state = 0
         self.clock = pg.time.Clock()
@@ -68,8 +76,14 @@ class Level:
                 self.player.handle_keyup(event.key)
 
         self.game.screen.fill(self.game.config.BACKGROUND_COLOR)
+        background_rect = pg.Rect((0, 0), Config.SIZE)
+        background_rect.y = -100
+        background_rect.x = round(-(1280 - Config.SIZE[0]) * (self.actual_length / self.length))
+        self.game.screen.blit(self.game.background, background_rect)
         self.game.sprites_list.update()
-        self.game.sprites_list.draw(self.game.screen)
+        self.game.background_list.draw(self.game.screen)
+        self.game.block_list.draw(self.game.screen)
+        self.game.player_bullets_list.draw(self.game.screen)
         self.game.enemies_list.draw(self.game.screen)
         self.game.players_list.draw(self.game.screen)
         self.handle_enemy_touch()
