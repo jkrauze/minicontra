@@ -4,13 +4,14 @@ import configparser
 
 
 class Config:
+    SIZE = [640, 480]
+    TICK = 60
+    NAME = 'minicontra'
+
     def __init__(self):
         self.file = 'settings.cfg'
         self.section = 'main'
         self.JUMP_PRECISION = 1.2
-        self.NAME = 'minicontra'
-        self.SIZE = [640, 480]
-        self.TICK = 60
         self.BACKGROUND_COLOR = (5, 5, 30)
         self.KEY_UP = pg.K_UP, pg.K_w
         self.KEY_LEFT = pg.K_LEFT, pg.K_a
