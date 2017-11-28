@@ -248,8 +248,11 @@ class Player(pg.sprite.Sprite):
             except ValueError:
                 pass
         if standing_on:
-            self.a[1] = 0
-            self.v[1] = -15
+            if self.looking_down:
+                self.rect.y += 1
+            else:
+                self.a[1] = 0
+                self.v[1] = -15
         self.rect.x -= x_diff
         self.rect.y -= 1
 
