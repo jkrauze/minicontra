@@ -1,4 +1,5 @@
 import pygame as pg
+import os
 import color as col
 from config import Config
 from block import Block
@@ -34,14 +35,14 @@ class Level:
         self.done = False
         self.return_state = 0
         self.clock = pg.time.Clock()
-        self.player_health = [pg.image.load('img/heart.png').convert(),
-                              pg.image.load('img/heart.png').convert(),
-                              pg.image.load('img/heart.png').convert()]
+        self.player_health = [pg.image.load(os.path.join('img','heart.png')).convert(),
+                              pg.image.load(os.path.join('img','heart.png')).convert(),
+                              pg.image.load(os.path.join('img','heart.png')).convert()]
         for elem in self.player_health:
             elem.set_colorkey(col.BLACK)
 
     def run(self):
-        pg.mixer.music.load('snd/game.ogg')
+        pg.mixer.music.load(os.path.join('snd','game.ogg'))
         pg.mixer.music.play(-1)
         while not self.done:
             self.tick()

@@ -1,4 +1,5 @@
 import pygame as pg
+import os
 import color as col
 from config import Config
 
@@ -6,7 +7,7 @@ from config import Config
 class Menu:
     def __init__(self, game, title, options, esc_option):
         self.game = game
-        self.font = 'font/8-BIT WONDER.TTF'
+        self.font = os.path.join('font','8-BIT WONDER.TTF')
         self.font_color = col.WHITE
         self.font_color_choosed = col.RED
         self.font_color_title = col.BLUE
