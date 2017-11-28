@@ -8,7 +8,6 @@ class Bullet(pg.sprite.Sprite):
     def __init__(self, game, speed, power, center_x, center_y, way):
         super().__init__()
         self.game = game
-        self.game.player_bullets_list.add(self)
         self.game.sprites_list.add(self)
         self.speed = speed
         self.power = power

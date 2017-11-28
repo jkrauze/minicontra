@@ -4,7 +4,7 @@ import color as col
 from config import Config
 from block import Block
 from platform import Platform
-from enemy import Enemy
+from enemy.soldier import Soldier
 from player import Player
 from menu import Menu
 from rock import Rock
@@ -25,7 +25,7 @@ class Level:
                     elif char == 'p':
                         Platform(self.game, 32, 32, 32 * pos, 32 * line_num)
                     elif char == 'e':
-                        Enemy(self.game, 1, 32 * pos, 32 * line_num - 28)
+                        Soldier(self.game, 1, 32 * pos, 32 * line_num - 28)
                     elif char == 'x':
                         self.player = Player(self.game, 0, 32 * pos, 32 * line_num - 28)
                     elif char == 'l':
@@ -50,6 +50,7 @@ class Level:
         self.game.background_list.empty()
         self.game.block_list.empty()
         self.game.player_bullets_list.empty()
+        self.game.enemy_bullets_list.empty()
         self.game.enemies_list.empty()
         self.game.sprites_list.empty()
         self.game.players_list.empty()
@@ -86,6 +87,7 @@ class Level:
         self.game.background_list.draw(self.game.screen)
         self.game.block_list.draw(self.game.screen)
         self.game.player_bullets_list.draw(self.game.screen)
+        self.game.enemy_bullets_list.draw(self.game.screen)
         self.game.enemies_list.draw(self.game.screen)
         self.game.players_list.draw(self.game.screen)
         self.handle_enemy_touch()

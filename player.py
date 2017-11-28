@@ -1,5 +1,4 @@
 import pygame as pg
-
 import weapon.default_weapon
 from block import Block
 
@@ -210,8 +209,8 @@ class Player(pg.sprite.Sprite):
                 if block.rect.right < -self.game.config.SIZE[1] // 2:
                     block.kill()
         self.weapon.handle_shooting(self.rect.centerx - 6 * self.last_move,
-                       self.rect.centery - 6 - 8 * self.direction_y(),
-                       self.shoot_direction())
+                                    self.rect.centery - 6 - 8 * self.direction_y(),
+                                    self.shoot_direction())
         self.set_image()
         if self.recovering > 0:
             self.recovering -= 1

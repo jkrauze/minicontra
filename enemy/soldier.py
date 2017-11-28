@@ -1,9 +1,7 @@
 import pygame as pg
-import config as c
-import color as col
+from weapon.soldier_weapon import SoldierWeapon
 
-
-class Enemy(pg.sprite.Sprite):
+class Soldier(pg.sprite.Sprite):
     def __init__(self, game, hp, x, y):
         super().__init__()
         self.game = game
@@ -23,7 +21,8 @@ class Enemy(pg.sprite.Sprite):
         self.a = [0, 0]
         self.v_max = 2
         self.friction = 0.51
-        self.shooting_frequency = 10
+        self.shooting_frequency = 30
+        self.weapon = SoldierWeapon(game)
         self.moving_left = True
         self.moving_right = False
         self.run_animation = 0
@@ -44,6 +43,8 @@ class Enemy(pg.sprite.Sprite):
         self.run_animation = (self.run_animation + 1) % 24
 
     def update(self):
+        if self.rect.x > self.game.config.SIZE[0]:
+            return
         way = self.direction_x()
         diff = max(1, self.v[1])
         self.rect.y += diff
@@ -117,5 +118,7 @@ class Enemy(pg.sprite.Sprite):
                     self.v = [1, 0]
                     self.a = [0, 0]
                     self.moving_right, self.moving_left = False, True
-
+        self.weapon.handle_shooting(self.rect.centerx - 6 * way,
+                                    self.rect.centery - 6,
+                                    (way, 0))
         self.set_image()
