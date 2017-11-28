@@ -21,25 +21,7 @@ class Bullet(pg.sprite.Sprite):
         self.rect.centery = center_y
 
     def set_image(self):
-        if self.way[0] == 0:
-            if self.way[1] == -1:
-                self.image = self.game.bullet_sprite.subsurface((424, 13, 15, 15))
-            else:
-                self.image = self.game.bullet_sprite.subsurface((424, 60, 15, 15))
-        elif self.way[0] == 1:
-            if self.way[1] == 0:
-                self.image = self.game.bullet_sprite.subsurface((448, 37, 15, 15))
-            elif self.way[1] == -1:
-                self.image = self.game.bullet_sprite.subsurface((448, 12, 15, 15))
-            else:
-                self.image = self.game.bullet_sprite.subsurface((448, 61, 15, 15))
-        else:
-            if self.way[1] == 0:
-                self.image = self.game.bullet_sprite.subsurface((399, 37, 15, 15))
-            elif self.way[1] == -1:
-                self.image = self.game.bullet_sprite.subsurface((399, 12, 15, 15))
-            else:
-                self.image = self.game.bullet_sprite.subsurface((399, 61, 15, 15))
+        raise NotImplementedError('set_image method must be implemented by bullet subclass')
 
     def update(self):
         self.rect.x += self.speed * self.way[0]

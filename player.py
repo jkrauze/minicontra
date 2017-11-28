@@ -1,9 +1,7 @@
 import pygame as pg
-import config as c
-import color as col
-from bullet import Bullet
+
+import weapon.default_weapon
 from block import Block
-from platform import Platform
 
 
 class Player(pg.sprite.Sprite):
@@ -30,7 +28,7 @@ class Player(pg.sprite.Sprite):
         self.moving_right = False
         self.looking_up = False
         self.looking_down = False
-        self.shooting = -1
+        self.weapon = weapon.default_weapon.DefaultWeapon(self.game)
         self.recovering = 0
         self.last_move = 1
         self.last_look = 0
@@ -210,16 +208,9 @@ class Player(pg.sprite.Sprite):
                 block.rect.x -= self.v[0]
                 if block.rect.right < -self.game.config.SIZE[1] // 2:
                     block.kill()
-        if self.shooting > 0:
-            self.shooting -= 1
-        elif self.shooting == 0:
-            self.shooting = self.shooting_frequency
-            self.game.player_bullets_list.add(
-                Bullet(self.game, 15, 15, 10, 1, self.rect.centerx - 6 * self.last_move,
+        self.weapon.handle_shooting(self.rect.centerx - 6 * self.last_move,
                        self.rect.centery - 6 - 8 * self.direction_y(),
-                       self.shoot_direction()))
-        elif self.shooting < -1:
-            self.shooting += 1
+                       self.shoot_direction())
         self.set_image()
         if self.recovering > 0:
             self.recovering -= 1
@@ -293,17 +284,13 @@ class Player(pg.sprite.Sprite):
         self.looking_down = False
 
     def shoot(self):
-        if self.shooting == -1:
-            self.shooting = 0
+        self.weapon.start_shooting()
 
     def shoot_stop(self):
-        if self.shooting > 0:
-            self.shooting = -self.shooting
-        elif self.shooting == 0:
-            self.shooting = -1
+        self.weapon.stop_shooting()
 
     def stop(self):
-        self.shooting = -1
+        self.weapon.stop_shooting()
         self.moving_right = False
         self.moving_left = False
         self.looking_up = False
