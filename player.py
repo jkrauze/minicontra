@@ -1,6 +1,7 @@
 import pygame as pg
 import weapon.default_weapon
 from block import Block
+from platform import Platform
 
 
 class Player(pg.sprite.Sprite):
@@ -239,7 +240,7 @@ class Player(pg.sprite.Sprite):
             except ValueError:
                 pass
         if standing_on:
-            if self.looking_down:
+            if self.looking_down and isinstance(standing_on[0], Platform):
                 self.rect.y += 1
             else:
                 self.a[1] = 0
