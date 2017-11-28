@@ -15,27 +15,32 @@ class Level:
         self.game = game
         self.file_path = file_path
         self.length = 0
+
+        def check_border(line, line_len, pos):
+            border = 0
+            if pos > 0 and line[pos - 1] == ' ':
+                border = -1
+            elif pos < line_len - 1 and line[pos + 1] == ' ':
+                border = 1
+            return border
+
         with open(file_path, 'r') as file:
             for line_num, line in enumerate(file, 0):
                 line_len = len(line)
                 if len(line) > self.length:
                     self.length = line_len
                 for pos, char in enumerate(line, 0):
-                    border = 0
-                    if pos>0 and line[pos - 1] != 'p' and line[pos - 1] != 'l':
-                        border = -1
-                    elif pos<line_len-1 and line[pos + 1] != 'p' and line[pos + 1] != 'l':
-                        border = 1
                     if char == 'b':
                         Block(self.game, 32, 32, 32 * pos, 32 * line_num)
                     elif char == 'p':
-                        Platform(self.game, 32, 32, 32 * pos, 32 * line_num, border)
-                    elif char == 'e':
+                        Platform(self.game, 32, 32, 32 * pos, 32 * line_num, check_border(line, line_len, pos))
+                    elif char == 's':
                         Soldier(self.game, 1, 32 * pos, 32 * line_num - 28)
                     elif char == 'x':
                         self.player = Player(self.game, 0, 32 * pos, 32 * line_num - 28)
-                    elif char == 'l':
-                        Rock(self.game, 32 * pos, 32 * line_num, border)
+                    if char == 'l' or (char != ' ' and pos > 0 and line[pos - 1] == 'l' and pos < line_len - 1 and line[
+                            pos + 1] == 'l'):
+                        Rock(self.game, 32 * pos, 32 * line_num, check_border(line, line_len, pos))
         self.length *= 32
         self.actual_length = self.player.rect.x
         self.done = False
