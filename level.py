@@ -35,14 +35,14 @@ class Level:
         self.done = False
         self.return_state = 0
         self.clock = pg.time.Clock()
-        self.player_health = [pg.image.load(os.path.join('img','heart.png')).convert(),
-                              pg.image.load(os.path.join('img','heart.png')).convert(),
-                              pg.image.load(os.path.join('img','heart.png')).convert()]
+        self.player_health = [pg.image.load(os.path.join('img', 'heart.png')).convert(),
+                              pg.image.load(os.path.join('img', 'heart.png')).convert(),
+                              pg.image.load(os.path.join('img', 'heart.png')).convert()]
         for elem in self.player_health:
             elem.set_colorkey(col.BLACK)
 
     def run(self):
-        pg.mixer.music.load(os.path.join('snd','game.ogg'))
+        pg.mixer.music.load(os.path.join('snd', 'game.ogg'))
         pg.mixer.music.play(-1)
         while not self.done:
             self.tick()
@@ -94,6 +94,7 @@ class Level:
         self.handle_shooting()
         self.draw_hud()
 
+        pg.transform.smoothscale(self.game.screen, self.game.window_size, self.game.window)
         pg.display.flip()
         self.clock.tick(self.game.config.TICK)
 

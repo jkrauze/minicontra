@@ -7,7 +7,7 @@ from config import Config
 class Menu:
     def __init__(self, game, title, options, esc_option):
         self.game = game
-        self.font = os.path.join('font','8-BIT WONDER.TTF')
+        self.font = os.path.join('font', '8-BIT WONDER.TTF')
         self.font_color = col.WHITE
         self.font_color_choosed = col.RED
         self.font_color_title = col.BLUE
@@ -54,6 +54,7 @@ class Menu:
                     self.background_animation_way = -self.background_animation_way
         self.draw()
 
+        pg.transform.smoothscale(self.game.screen, self.game.window_size, self.game.window)
         pg.display.flip()
         self.clock.tick(self.game.config.TICK)
 

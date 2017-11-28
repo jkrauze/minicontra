@@ -10,8 +10,11 @@ class Game:
         pg.mixer.pre_init(frequency=44100, size=16, channels=2, buffer=512)
         pg.init()
         self.config = c.Config()
-        self.screen = pg.display.set_mode(self.config.SIZE)
+        self.screen = pg.Surface(self.config.SIZE)
+        self.window_size = [1024,768]
+        self.window = pg.display.set_mode(self.window_size)
         pg.display.set_caption(self.config.NAME)
+        pg.display.toggle_fullscreen()
 
         self.ground_sprite = pg.image.load(os.path.join('img', 'ground3T.png'))
         self.ground_sprite.set_colorkey(self.ground_sprite.get_at((17, 1)))
