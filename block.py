@@ -19,6 +19,7 @@ class Block(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.mask = pg.mask.from_surface(self.image)
         self.over_image = Image(self.game,
                                 self.game.ground_sprite.subsurface(
                                     (64 + 160 * self.sprite_pos[0], 32 * self.sprite_pos[1], 32, 32)), x,

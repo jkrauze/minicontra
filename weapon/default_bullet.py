@@ -3,7 +3,7 @@ from weapon.bullet import Bullet
 
 class DefaultBullet(Bullet):
     def __init__(self, game, center_x, center_y, way):
-        super().__init__(game, 15, 15, 10, 1, center_x, center_y, way)
+        super().__init__(game, 10, 1, center_x, center_y, way)
 
     def set_image(self):
         if self.way[0] == 0:
@@ -25,3 +25,4 @@ class DefaultBullet(Bullet):
                 self.image = self.game.bullet_sprite.subsurface((399, 12, 15, 15))
             else:
                 self.image = self.game.bullet_sprite.subsurface((399, 61, 15, 15))
+        return self.image

@@ -21,6 +21,7 @@ class Platform(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.mask = pg.mask.from_surface(self.image)
         self.rock = Rock(self.game, x, y)
         self.over_image = Image(self.game,
                                 self.game.ground_sprite.subsurface(

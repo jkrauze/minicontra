@@ -101,13 +101,13 @@ class Level:
             self.game.screen.blit(self.player_health[i], (10 + 30 * i, 10))
 
     def handle_enemy_touch(self):
-        enemies = pg.sprite.spritecollide(self.player, self.game.enemies_list, False)
+        enemies = pg.sprite.spritecollide(self.player, self.game.enemies_list, False, pg.sprite.collide_mask)
         if enemies:
             self.player.hurt(1)
 
     def handle_shooting(self):
         for enemy in self.game.enemies_list:
-            bullets = pg.sprite.spritecollide(enemy, self.game.player_bullets_list, False)
+            bullets = pg.sprite.spritecollide(enemy, self.game.player_bullets_list, False, pg.sprite.collide_mask)
             for bullet in bullets:
                 enemy.hp -= bullet.power
                 bullet.kill()
