@@ -203,8 +203,13 @@ class Player(pg.sprite.Sprite):
             self.a[0] = 0
             self.v[0] = 0
             self.rect.x = 0
+        elif  self.rect.x > self.game.actual_level.level_border:
+            self.a[0] = 0
+            self.v[0] = 0
+            self.rect.x = self.game.actual_level.level_border
         elif self.rect.x > self.screen_middle:
             self.game.actual_level.actual_length += self.v[0]
+            self.game.actual_level.level_border -= self.v[0]
             for block in self.game.sprites_list:
                 block.rect.x -= self.v[0]
                 if block.rect.right < -self.game.config.SIZE[1] // 2:

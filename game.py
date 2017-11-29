@@ -31,6 +31,9 @@ class Game:
         self.enemy_sprite = pg.image.load(os.path.join('img', 'OpenGunnerEnemySoldier.png')).convert()
         self.enemy_sprite.set_colorkey(self.enemy_sprite.get_at((1, 1)))
 
+        self.boss_sprite = pg.image.load(os.path.join('img', 'OpenGunnerMechs.png')).convert()
+        self.boss_sprite.set_colorkey(self.boss_sprite.get_at((1, 1)))
+
         self.bullet_sprite = pg.image.load(os.path.join('img', 'M484BulletCollection2.png')).convert()
         self.bullet_sprite.set_colorkey(self.bullet_sprite.get_at((1, 1)))
         self.soldier_bullet_sprite = pg.image.load(os.path.join('img', 'M484BulletCollection2_modified1.png')).convert()
@@ -92,7 +95,9 @@ class Game:
                     pg.mixer.music.stop()
                     self.actual_level = Level(self, "lvl/1.lvl")
                     option = self.actual_level.run()
-                    if option == 0:
+                    if self.actual_level.success:
+                        option = Menu(self, "The End", ["Start again", "Return to menu", "Exit game"], -1).run()
+                    elif option == 0:
                         option = Menu(self, "Game Over", ["Try again", "Return to menu", "Exit game"], -1).run()
                     else:
                         option -= 1

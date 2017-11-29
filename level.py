@@ -10,6 +10,7 @@ from enemy.soldier import Soldier
 from player import Player
 from menu import Menu
 from rock import Rock
+from enemy.boss import Boss
 
 
 class Level:
@@ -17,6 +18,7 @@ class Level:
         self.game = game
         self.file_path = file_path
         self.length = 0
+        self.success = False
 
         def check_border(line, line_len, pos):
             border = 0
@@ -40,6 +42,9 @@ class Level:
                         Soldier(self.game, 1, 32 * pos, 32 * line_num - 28)
                     elif char == 'x':
                         self.player = Player(self.game, 0, 32 * pos, 32 * line_num - 28)
+                    elif char == 'f':
+                        self.boss = Boss(self.game, 15, 32 * pos, 32 * line_num - 76)
+                        self.level_border = 32 * pos + 16
                     if char == 'l' or (char != ' ' and pos > 0 and line[pos - 1] == 'l' and pos < line_len - 1 and line[
                             pos + 1] == 'l'):
                         Rock(self.game, 32 * pos, 32 * line_num, check_border(line, line_len, pos))
@@ -71,6 +76,12 @@ class Level:
         while not self.done:
             self.tick()
         pg.mixer.music.stop()
+        if self.success:
+            self.draw_screen()
+            self.draw_hud()
+            self.game.screen_draw()
+            time.sleep(1)
+            self.game.screen_fadeout()
         self.game.background_list.empty()
         self.game.block_list.empty()
         self.game.player_bullets_list.empty()
@@ -134,7 +145,7 @@ class Level:
             self.game.screen.blit(self.player_health[i], (0 + 30 * i, 0))
         score = pg.font.Font(self.game.font, 20).render(str(self.game.score), 1, self.game.font_color)
         score_rect = score.get_rect()
-        score_rect.topright = (630,10)
+        score_rect.topright = (630, 10)
         self.game.screen.blit(score, score_rect)
 
     def handle_enemy_touch(self):
@@ -150,7 +161,12 @@ class Level:
                 bullet.kill()
                 if enemy.hp <= 0:
                     enemy.kill()
-                    self.game.score += 10
+                    if isinstance(enemy, Boss):
+                        self.game.score += 100 * self.player.hp
+                        self.done = True
+                        self.success = True
+                    else:
+                        self.game.score += 10
         bullets = pg.sprite.spritecollide(self.player, self.game.enemy_bullets_list, False, pg.sprite.collide_mask)
         for bullet in bullets:
             self.player.hurt(bullet.power)
