@@ -1,16 +1,10 @@
 import pygame as pg
-import os
-import color as col
 from config import Config
 
 
 class Menu:
     def __init__(self, game, title, options, esc_option):
         self.game = game
-        self.font = os.path.join('font', '8-BIT WONDER.TTF')
-        self.font_color = col.WHITE
-        self.font_color_choosed = col.RED
-        self.font_color_title = col.BLUE
         self.done = False
         self.clock = pg.time.Clock()
         self.choose = 0
@@ -21,6 +15,10 @@ class Menu:
         self.background_animation = 0
         self.background_animation_way = -1
         self.is_main = title == Config.NAME
+        if self.is_main:
+            self.tick()
+            self.game.screen_fadein()
+            pg.event.clear()
 
     def run(self):
         while not self.done:
@@ -54,15 +52,14 @@ class Menu:
                     self.background_animation_way = -self.background_animation_way
         self.draw()
 
-        pg.transform.smoothscale(self.game.screen, self.game.window_size, self.game.window)
-        pg.display.flip()
+        self.game.screen_draw()
         self.clock.tick(self.game.config.TICK)
 
     def draw(self):
         self.game.screen.blit(
-            pg.font.Font(self.font, 40).render(self.title, 1, self.font_color_title), (50, 50))
+            pg.font.Font(self.game.font, 40).render(self.title, 1, self.game.font_color_title), (50, 50))
         for i in range(len(self.options)):
             self.game.screen.blit(
-                pg.font.Font(self.font, 20).render(self.options[i], 1,
-                                                   self.font_color if i != self.choose else self.font_color_choosed),
+                pg.font.Font(self.game.font, 20).render(self.options[i], 1,
+                                                        self.game.font_color if i != self.choose else self.game.font_color_choosed),
                 (50, 200 + 60 * i))

@@ -1,6 +1,7 @@
 import pygame as pg
 import os
 import config as c
+import color as col
 from level import Level
 from menu import Menu
 
@@ -9,12 +10,16 @@ class Game:
     def __init__(self):
         pg.mixer.pre_init(frequency=44100, size=16, channels=2, buffer=512)
         pg.init()
+        self.font = os.path.join('font', '8-BIT WONDER.TTF')
+        self.font_color = col.WHITE
+        self.font_color_choosed = col.RED
+        self.font_color_title = col.BLUE
+        self.score = 0
         self.config = c.Config()
         self.screen = pg.Surface(self.config.SIZE)
-        self.window_size = [1024,768]
+        self.window_size = [800, 600]
         self.window = pg.display.set_mode(self.window_size)
         pg.display.set_caption(self.config.NAME)
-        pg.display.toggle_fullscreen()
 
         self.ground_sprite = pg.image.load(os.path.join('img', 'ground3T.png'))
         self.ground_sprite.set_colorkey(self.ground_sprite.get_at((17, 1)))
@@ -48,13 +53,42 @@ class Game:
 
         self.done = False
 
+    def screen_draw(self):
+        pg.transform.smoothscale(self.screen, self.window_size, self.window)
+        pg.display.flip()
+
+    def screen_fadein(self):
+        clock = pg.time.Clock()
+        screen_copy = self.screen.copy()
+        surface = pg.Surface(self.config.SIZE)
+        surface.fill(col.BLACK)
+        for i in range(255, -1, -5):
+            surface.set_alpha(i)
+            self.screen.blit(screen_copy, (0, 0))
+            self.screen.blit(surface, (0, 0))
+            self.screen_draw()
+            clock.tick(60)
+
+    def screen_fadeout(self):
+        clock = pg.time.Clock()
+        surface = pg.Surface(self.config.SIZE)
+        surface.fill(col.BLACK)
+        for i in range(0, 255, 5):
+            surface.set_alpha(i)
+            self.screen.blit(surface, (0, 0))
+            self.screen_draw()
+            clock.tick(60)
+
     def run(self):
         while not self.done:
+            main_menu = Menu(self, self.config.NAME, ["Single player", "Two players", "Options", "Exit"], -1)
             pg.mixer.music.load(os.path.join('snd', 'menu.ogg'))
             pg.mixer.music.play(-1)
-            option = Menu(self, self.config.NAME, ["Single player", "Two players", "Options", "Exit"], -1).run()
+            option = main_menu.run()
             if option == 0:
+                self.screen_fadeout()
                 while not self.done:
+                    self.score = 0
                     pg.mixer.music.stop()
                     self.actual_level = Level(self, "lvl/1.lvl")
                     option = self.actual_level.run()
@@ -68,4 +102,5 @@ class Game:
                         self.done = True
             elif option == 3:
                 break
+        self.screen_fadeout()
         pg.quit()

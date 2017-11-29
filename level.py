@@ -1,5 +1,7 @@
 import pygame as pg
 import os
+import time
+import math
 import color as col
 from config import Config
 from block import Block
@@ -52,9 +54,20 @@ class Level:
         for elem in self.player_health:
             elem.set_colorkey(col.BLACK)
 
+    def draw_start_card(self):
+        self.game.screen.fill(self.game.config.BACKGROUND_COLOR)
+        self.game.screen.blit(
+            pg.font.Font(self.game.font, 40).render("level 1", 1, self.game.font_color), (50, 50))
+        self.game.screen_draw()
+
     def run(self):
+        self.draw_start_card()
+        time.sleep(2)
+        self.draw_screen()
+        self.game.screen_fadein()
         pg.mixer.music.load(os.path.join('snd', 'game.ogg'))
         pg.mixer.music.play(-1)
+        pg.event.clear()
         while not self.done:
             self.tick()
         pg.mixer.music.stop()
@@ -67,7 +80,7 @@ class Level:
         self.game.players_list.empty()
         return self.return_state
 
-    def tick(self):
+    def handle_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.done = True
@@ -89,6 +102,7 @@ class Level:
             elif event.type == pg.KEYUP:
                 self.player.handle_keyup(event.key)
 
+    def draw_screen(self):
         self.game.screen.fill(self.game.config.BACKGROUND_COLOR)
         background_rect = pg.Rect((0, 0), Config.SIZE)
         background_rect.y = -100
@@ -101,19 +115,27 @@ class Level:
         self.game.enemy_bullets_list.draw(self.game.screen)
         self.game.enemies_list.draw(self.game.screen)
         self.game.players_list.draw(self.game.screen)
+
+    def tick(self):
+        self.handle_events()
+        if self.done:
+            return
+        self.draw_screen()
         self.handle_enemy_touch()
         self.handle_shooting()
         self.draw_hud()
-
-        pg.transform.smoothscale(self.game.screen, self.game.window_size, self.game.window)
-        pg.display.flip()
+        self.game.screen_draw()
         self.clock.tick(self.game.config.TICK)
 
     def draw_hud(self):
         for i in range(len(self.player_health)):
             if i >= self.player.hp:
                 self.player_health[i].set_alpha(100)
-            self.game.screen.blit(self.player_health[i], (10 + 30 * i, 10))
+            self.game.screen.blit(self.player_health[i], (0 + 30 * i, 0))
+        score = pg.font.Font(self.game.font, 20).render(str(self.game.score), 1, self.game.font_color)
+        score_rect = score.get_rect()
+        score_rect.topright = (630,10)
+        self.game.screen.blit(score, score_rect)
 
     def handle_enemy_touch(self):
         enemies = pg.sprite.spritecollide(self.player, self.game.enemies_list, False, pg.sprite.collide_mask)
@@ -128,3 +150,7 @@ class Level:
                 bullet.kill()
                 if enemy.hp <= 0:
                     enemy.kill()
+                    self.game.score += 10
+        bullets = pg.sprite.spritecollide(self.player, self.game.enemy_bullets_list, False, pg.sprite.collide_mask)
+        for bullet in bullets:
+            self.player.hurt(bullet.power)
