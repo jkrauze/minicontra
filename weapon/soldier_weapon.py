@@ -8,3 +8,4 @@ class SoldierWeapon(EnemyWeapon):
 
     def shoot(self, x, y, shoot_direction):
         self.game.enemy_bullets_list.add(SoldierBullet(self.game, x, y, shoot_direction))
+        self.game.shoot_alt_sound.play()

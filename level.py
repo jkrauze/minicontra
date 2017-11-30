@@ -16,9 +16,12 @@ from enemy.boss import Boss
 class Level:
     def __init__(self, game, file_path):
         self.game = game
+        self.name = file_path[4:-4]
         self.file_path = file_path
         self.length = 0
         self.success = False
+        self.player = None
+        self.boss = None
 
         def check_border(line, line_len, pos):
             border = 0
@@ -48,6 +51,10 @@ class Level:
                     if char == 'l' or (char != ' ' and pos > 0 and line[pos - 1] == 'l' and pos < line_len - 1 and line[
                             pos + 1] == 'l'):
                         Rock(self.game, 32 * pos, 32 * line_num, check_border(line, line_len, pos))
+        if not self.player:
+            raise Exception("No player in {} level!".format(file))
+        if not self.boss:
+            raise Exception("No boss in {} level!".format(file))
         self.length *= 32
         self.actual_length = self.player.rect.x
         self.done = False
@@ -62,7 +69,7 @@ class Level:
     def draw_start_card(self):
         self.game.screen.fill(self.game.config.BACKGROUND_COLOR)
         self.game.screen.blit(
-            pg.font.Font(self.game.font, 40).render("level 1", 1, self.game.font_color), (50, 50))
+            pg.font.Font(self.game.font, 40).render("level " + self.name, 1, self.game.font_color), (50, 50))
         self.game.screen_draw()
 
     def run(self):
@@ -71,6 +78,7 @@ class Level:
         self.draw_screen()
         self.game.screen_fadein()
         pg.mixer.music.load(os.path.join('snd', 'game.ogg'))
+        pg.mixer.music.set_volume(0.7)
         pg.mixer.music.play(-1)
         pg.event.clear()
         while not self.done:
@@ -80,7 +88,9 @@ class Level:
             self.draw_screen()
             self.draw_hud()
             self.game.screen_draw()
-            time.sleep(1)
+            time.sleep(0.5)
+            self.game.win_sound.play()
+            time.sleep(3)
             self.game.screen_fadeout()
         self.game.background_list.empty()
         self.game.block_list.empty()
@@ -158,10 +168,12 @@ class Level:
             bullets = pg.sprite.spritecollide(enemy, self.game.player_bullets_list, False, pg.sprite.collide_mask)
             for bullet in bullets:
                 enemy.hp -= bullet.power
+                self.game.hit_alt_sound.play()
                 bullet.kill()
                 if enemy.hp <= 0:
                     enemy.kill()
                     if isinstance(enemy, Boss):
+                        self.game.boss_destroy_sound.play()
                         self.game.score += 100 * self.player.hp
                         self.done = True
                         self.success = True

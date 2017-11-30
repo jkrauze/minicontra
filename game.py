@@ -22,6 +22,24 @@ class Game:
         self.window = pg.display.set_mode(self.config.WINDOW_SIZE)
         pg.display.set_caption(self.config.NAME)
 
+        self.win_sound = pg.mixer.Sound(os.path.join('snd', 'Jingle_Achievement_01.ogg'))
+        self.win_sound.set_volume(0.9)
+        self.lose_sound = pg.mixer.Sound(os.path.join('snd', 'Jingle_Lose_00.ogg'))
+        self.lose_sound.set_volume(0.9)
+
+        self.shoot_sound = pg.mixer.Sound(os.path.join('snd', 'Open_00.ogg'))
+        self.shoot_sound.set_volume(0.8)
+        self.shoot_alt_sound = pg.mixer.Sound(os.path.join('snd', 'Open_01.ogg'))
+        self.shoot_alt_sound.set_volume(0.6)
+
+        self.hit_sound = pg.mixer.Sound(os.path.join('snd', 'Hit_02.ogg'))
+        self.hit_sound.set_volume(0.8)
+        self.hit_alt_sound = pg.mixer.Sound(os.path.join('snd', 'Hit_01.ogg'))
+        self.hit_alt_sound.set_volume(0.6)
+
+        self.boss_destroy_sound = pg.mixer.Sound(os.path.join('snd', 'Explosion_00.ogg'))
+        self.boss_destroy_sound.set_volume(0.8)
+
         self.ground_sprite = pg.image.load(os.path.join('img', 'ground3T.png'))
         self.ground_sprite.set_colorkey(self.ground_sprite.get_at((17, 1)))
         self.ground_sprite = pg.transform.scale2x(self.ground_sprite)
@@ -89,6 +107,7 @@ class Game:
     def run(self):
         main_menu = Menu(self, self.config.NAME, ["Single player", "Two players", "Options", "Exit"], -1)
         pg.mixer.music.load(os.path.join('snd', 'menu.ogg'))
+        pg.mixer.music.set_volume(0.7)
         pg.mixer.music.play(-1)
         while not self.done:
             option = main_menu.run()
@@ -97,16 +116,26 @@ class Game:
                 while not self.done:
                     self.score = 0
                     pg.mixer.music.stop()
-                    self.actual_level = Level(self, "lvl/1.lvl")
-                    option = self.actual_level.run()
+                    for file in sorted(os.listdir('lvl')):
+                        if file.endswith(".lvl"):
+                            self.actual_level = Level(self, "lvl/" + file)
+                            option = self.actual_level.run()
+                            if not self.actual_level.success:
+                                break
+
                     if self.actual_level.success:
+                        pg.mixer.music.load(os.path.join('snd', 'end.ogg'))
+                        pg.mixer.music.set_volume(0.7)
+                        pg.mixer.music.play(-1)
                         option = Menu(self, "The End", ["Start again", "Return to menu", "Exit game"], -1).run()
                     elif option == 0:
+                        self.lose_sound.play()
                         option = Menu(self, "Game Over", ["Try again", "Return to menu", "Exit game"], -1).run()
                     else:
                         option -= 1
                     if option == 1:
                         pg.mixer.music.load(os.path.join('snd', 'menu.ogg'))
+                        pg.mixer.music.set_volume(0.7)
                         pg.mixer.music.play(-1)
                         break
                     elif option == 2:

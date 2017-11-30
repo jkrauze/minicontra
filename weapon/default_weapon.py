@@ -8,3 +8,4 @@ class DefaultWeapon(Weapon):
 
     def shoot(self, x, y, shoot_direction):
         self.game.player_bullets_list.add(DefaultBullet(self.game, x, y, shoot_direction))
+        self.game.shoot_sound.play()

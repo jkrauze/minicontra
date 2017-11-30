@@ -227,6 +227,7 @@ class Player(pg.sprite.Sprite):
     def hurt(self, hp):
         if self.recovering > 0:
             return
+        self.game.hit_sound.play()
         self.hp = max(self.hp - hp, 0)
         self.recovering = 180
         if self.hp == 0:

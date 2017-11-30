@@ -10,3 +10,4 @@ class BossWeapon(EnemyWeapon):
         self.game.enemy_bullets_list.add(BossBullet(self.game, x, y, (-5, -1)))
         self.game.enemy_bullets_list.add(BossBullet(self.game, x, y, (-5, 0)))
         self.game.enemy_bullets_list.add(BossBullet(self.game, x, y, (-5, 1)))
+        self.game.shoot_alt_sound.play()
