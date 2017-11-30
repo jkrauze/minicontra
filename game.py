@@ -111,14 +111,15 @@ class Game:
         pg.mixer.music.play(-1)
         while not self.done:
             option = main_menu.run()
-            if option == 0:
+            if option == 0 or option == 1:
+                players_count = option + 1
                 self.screen_fadeout()
                 while not self.done:
                     self.score = 0
                     pg.mixer.music.stop()
                     for file in sorted(os.listdir('lvl')):
                         if file.endswith(".lvl"):
-                            self.actual_level = Level(self, "lvl/" + file)
+                            self.actual_level = Level(self, "lvl/" + file, players_count)
                             option = self.actual_level.run()
                             if not self.actual_level.success:
                                 break

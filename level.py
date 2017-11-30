@@ -14,13 +14,15 @@ from enemy.boss import Boss
 
 
 class Level:
-    def __init__(self, game, file_path):
+    def __init__(self, game, file_path, player_count):
         self.game = game
         self.name = file_path[4:-4]
         self.file_path = file_path
         self.length = 0
         self.success = False
+        self.player_count = player_count
         self.player = None
+        self.player2 = None
         self.boss = None
 
         def check_border(line, line_len, pos):
@@ -45,6 +47,8 @@ class Level:
                         Soldier(self.game, 1, 32 * pos, 32 * line_num - 28)
                     elif char == 'x':
                         self.player = Player(self.game, 0, 32 * pos, 32 * line_num - 28)
+                        if self.player_count == 2:
+                            self.player2 = Player(self.game, 1, 32 * pos, 32 * line_num - 28)
                     elif char == 'f':
                         self.boss = Boss(self.game, 15, 32 * pos, 32 * line_num - 76)
                         self.level_border = 32 * pos + 16
@@ -57,13 +61,18 @@ class Level:
             raise Exception("No boss in {} level!".format(file))
         self.length *= 32
         self.actual_length = self.player.rect.x
-        self.done = False
+        self.players_alive = player_count
         self.return_state = 0
         self.clock = pg.time.Clock()
         self.player_health = [pg.image.load(os.path.join('img', 'heart.png')).convert(),
                               pg.image.load(os.path.join('img', 'heart.png')).convert(),
                               pg.image.load(os.path.join('img', 'heart.png')).convert()]
         for elem in self.player_health:
+            elem.set_colorkey(col.BLACK)
+        self.player2_health = [pg.image.load(os.path.join('img', 'heart.png')).convert(),
+                               pg.image.load(os.path.join('img', 'heart.png')).convert(),
+                               pg.image.load(os.path.join('img', 'heart.png')).convert()]
+        for elem in self.player2_health:
             elem.set_colorkey(col.BLACK)
 
     def draw_start_card(self):
@@ -81,7 +90,7 @@ class Level:
         pg.mixer.music.set_volume(0.7)
         pg.mixer.music.play(-1)
         pg.event.clear()
-        while not self.done:
+        while self.players_alive > 0:
             self.tick()
         pg.mixer.music.stop()
         if self.success:
@@ -104,24 +113,30 @@ class Level:
     def handle_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                self.done = True
+                self.players_alive = 0
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
-                    while not self.done:
+                    while self.players_alive > 0:
                         pg.mixer.music.pause()
                         option = Menu(self.game, "Paused", ["Resume", "Restart", "Return to menu", "Exit game"],
                                       0).run()
                         if option == 0:
                             self.player.stop()
+                            if self.player_count == 2:
+                                self.player2.stop()
                             pg.mixer.music.unpause()
                             break
-                        self.done = True
+                        self.players_alive = 0
                         self.return_state = option
                         return
                 else:
                     self.player.handle_keydown(event.key)
+                    if self.player_count == 2:
+                        self.player2.handle_keydown(event.key)
             elif event.type == pg.KEYUP:
                 self.player.handle_keyup(event.key)
+                if self.player_count == 2:
+                    self.player2.handle_keyup(event.key)
 
     def draw_screen(self):
         self.game.screen.fill(self.game.config.BACKGROUND_COLOR)
@@ -139,7 +154,7 @@ class Level:
 
     def tick(self):
         self.handle_events()
-        if self.done:
+        if self.players_alive == 0:
             return
         self.draw_screen()
         self.handle_enemy_touch()
@@ -153,6 +168,11 @@ class Level:
             if i >= self.player.hp:
                 self.player_health[i].set_alpha(100)
             self.game.screen.blit(self.player_health[i], (0 + 30 * i, 0))
+        if self.player_count == 2:
+            for i in range(len(self.player2_health)):
+                if i >= self.player2.hp:
+                    self.player2_health[i].set_alpha(100)
+                self.game.screen.blit(self.player2_health[i], (0 + 30 * i, 30))
         score = pg.font.Font(self.game.font, 20).render(str(self.game.score), 1, self.game.font_color)
         score_rect = score.get_rect()
         score_rect.topright = (630, 10)
@@ -162,6 +182,10 @@ class Level:
         enemies = pg.sprite.spritecollide(self.player, self.game.enemies_list, False, pg.sprite.collide_mask)
         if enemies:
             self.player.hurt(1)
+        if self.player_count == 2:
+            enemies = pg.sprite.spritecollide(self.player2, self.game.enemies_list, False, pg.sprite.collide_mask)
+            if enemies:
+                self.player2.hurt(1)
 
     def handle_shooting(self):
         for enemy in self.game.enemies_list:
@@ -175,10 +199,16 @@ class Level:
                     if isinstance(enemy, Boss):
                         self.game.boss_destroy_sound.play()
                         self.game.score += 100 * self.player.hp
-                        self.done = True
+                        if self.player_count == 2:
+                            self.game.score += 100 * self.player2.hp
+                        self.players_alive = 0
                         self.success = True
                     else:
                         self.game.score += 10
         bullets = pg.sprite.spritecollide(self.player, self.game.enemy_bullets_list, False, pg.sprite.collide_mask)
         for bullet in bullets:
             self.player.hurt(bullet.power)
+        if self.player_count == 2:
+            bullets = pg.sprite.spritecollide(self.player2, self.game.enemy_bullets_list, False, pg.sprite.collide_mask)
+            for bullet in bullets:
+                self.player2.hurt(bullet.power)

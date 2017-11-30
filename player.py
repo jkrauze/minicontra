@@ -196,14 +196,15 @@ class Player(pg.sprite.Sprite):
                 self.v[1] = 0
                 self.a[1] = 0
         if self.rect.y > self.game.config.SIZE[1]:
-            self.game.actual_level.done = True
+            self.game.actual_level.players_alive -= 1
+            self.hp = 0
             self.kill()
             return
         if self.rect.x < 0:
             self.a[0] = 0
             self.v[0] = 0
             self.rect.x = 0
-        elif  self.rect.x > self.game.actual_level.level_border:
+        elif self.rect.x > self.game.actual_level.level_border:
             self.a[0] = 0
             self.v[0] = 0
             self.rect.x = self.game.actual_level.level_border
@@ -231,7 +232,7 @@ class Player(pg.sprite.Sprite):
         self.hp = max(self.hp - hp, 0)
         self.recovering = 180
         if self.hp == 0:
-            self.game.actual_level.done = True
+            self.game.actual_level.players_alive -= 1
             self.kill()
 
     def jump(self):
