@@ -33,6 +33,18 @@ class Boss(pg.sprite.Sprite):
             way = 1
         return way
 
+    def set_image(self):
+        if self.weapon.state == self.weapon.shooting_frequency-10:
+            self.image = self.game.boss_sprite.subsurface((136, 155, 140, 108))
+        elif self.weapon.state>20:
+            return
+        elif self.weapon.state>5:
+            self.image = self.game.boss_sprite.subsurface((136, 267, 140, 108))
+        else:
+            self.image = self.game.boss_sprite.subsurface((277, 267, 140, 108))
+
+
+
     def update(self):
         if self.rect.x > self.game.config.SIZE[0]:
             return
@@ -81,6 +93,7 @@ class Boss(pg.sprite.Sprite):
                     self.v = [1, 0]
                     self.a = [0, 0]
                     self.moving_right, self.moving_left = False, True
-        self.weapon.handle_shooting(self.rect.centerx - 50,
-                                    self.rect.centery,
+        self.weapon.handle_shooting(self.rect.left + 15,
+                                    self.rect.centery - 10,
                                     (way, 0))
+        self.set_image()
