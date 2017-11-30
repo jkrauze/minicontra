@@ -15,6 +15,12 @@ class Game:
         self.font_color_not_active = col.GRAY
         self.font_color_choosed = col.RED
         self.font_color_title = col.BLUE
+        self.highscore_file_path = ".game.score"
+        if not os.path.isfile(self.highscore_file_path):
+            with open(self.highscore_file_path, 'w') as file:
+                file.write('0')
+        with open(self.highscore_file_path, 'r') as file:
+            self.highscore = int(file.read())
         self.score = 0
         self.config = c.Config(self)
         self.screen = pg.Surface(self.config.SIZE)
@@ -125,6 +131,9 @@ class Game:
                                 break
 
                     if self.actual_level.success:
+                        if self.score > self.highscore:
+                            with open(self.highscore_file_path, 'w') as file:
+                                file.write(str(self.score))
                         pg.mixer.music.load(os.path.join('snd', 'end.ogg'))
                         pg.mixer.music.set_volume(0.7)
                         pg.mixer.music.play(-1)

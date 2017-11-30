@@ -16,6 +16,13 @@ from enemy.boss import Boss
 class Level:
     def __init__(self, game, file_path, player_count):
         self.game = game
+        self.highscore_file_path = file_path[:4] + "." + file_path[4:] + ".score"
+        if not os.path.isfile(self.highscore_file_path):
+            with open(self.highscore_file_path, 'w') as file:
+                file.write('0')
+        with open(self.highscore_file_path, 'r') as file:
+            self.highscore = int(file.read())
+        self.score = 0
         self.name = file_path[4:-4]
         self.file_path = file_path
         self.length = 0
@@ -94,6 +101,10 @@ class Level:
             self.tick()
         pg.mixer.music.stop()
         if self.success:
+            self.game.score += self.score
+            if self.score > self.highscore:
+                with open(self.highscore_file_path, 'w') as file:
+                    file.write(str(self.score))
             self.draw_screen()
             self.draw_hud()
             self.game.screen_draw()
@@ -173,7 +184,8 @@ class Level:
                 if i >= self.player2.hp:
                     self.player2_health[i].set_alpha(100)
                 self.game.screen.blit(self.player2_health[i], (0 + 30 * i, 30))
-        score = pg.font.Font(self.game.font, 20).render(str(self.game.score), 1, self.game.font_color)
+        score_value = str(self.game.score if self.success else self.game.score + self.score)
+        score = pg.font.Font(self.game.font, 20).render(score_value, 1, self.game.font_color)
         score_rect = score.get_rect()
         score_rect.topright = (630, 10)
         self.game.screen.blit(score, score_rect)
@@ -198,13 +210,13 @@ class Level:
                     enemy.kill()
                     if isinstance(enemy, Boss):
                         self.game.boss_destroy_sound.play()
-                        self.game.score += 100 * self.player.hp
+                        self.game.actual_level.score += 100 * self.player.hp
                         if self.player_count == 2:
-                            self.game.score += 100 * self.player2.hp
+                            self.game.actual_level.score += 100 * self.player2.hp
                         self.players_alive = 0
                         self.success = True
                     else:
-                        self.game.score += 10
+                        self.game.actual_level.score += 10
         bullets = pg.sprite.spritecollide(self.player, self.game.enemy_bullets_list, False, pg.sprite.collide_mask)
         for bullet in bullets:
             self.player.hurt(bullet.power)
