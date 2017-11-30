@@ -103,11 +103,14 @@ class Config:
 
     def tick(self):
         for event in pg.event.get():
-            if event.type == pg.QUIT or event.key == pg.K_ESCAPE:
+            if event.type == pg.QUIT:
                 self.choose = self.exit_option_index
                 self.done = True
             elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_RETURN or event.key == pg.K_SPACE:
+                if event.key == pg.K_ESCAPE:
+                    self.choose = self.exit_option_index
+                    self.done = True
+                elif event.key == pg.K_RETURN or event.key == pg.K_SPACE:
                     if self.choose == self.exit_option_index:
                         self.done = True
                     else:
