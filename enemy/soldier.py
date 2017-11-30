@@ -18,8 +18,8 @@ class Soldier(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.mask = pg.mask.from_surface(self.game.enemy_sprite.subsurface((24, 186, 50, 50)))
-        self.v = [0, 0]
-        self.a = [0, 0]
+        self.v = [-1, 0]
+        self.a = [-1, 0]
         self.v_max = 2
         self.friction = 0.51
         self.shooting_frequency = 30
