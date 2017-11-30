@@ -160,7 +160,7 @@ class Player(pg.sprite.Sprite):
                 self.a[0] = 1
 
         if not standing:
-            self.a[1] = 1
+            self.a[1] = 0.75
         else:
             self.a[1] = 0
             if self.v[1] > 0:
@@ -249,7 +249,7 @@ class Player(pg.sprite.Sprite):
                 self.rect.y += 1
             else:
                 self.a[1] = 0
-                self.v[1] = -15
+                self.v[1] = -12
         self.rect.x -= x_diff
         self.rect.y -= 1
 
