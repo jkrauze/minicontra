@@ -12,13 +12,14 @@ class Game:
         pg.init()
         self.font = os.path.join('font', '8-BIT WONDER.TTF')
         self.font_color = col.WHITE
+        self.font_color_not_active = col.GRAY
         self.font_color_choosed = col.RED
         self.font_color_title = col.BLUE
         self.score = 0
-        self.config = c.Config()
+        self.config = c.Config(self)
         self.screen = pg.Surface(self.config.SIZE)
-        self.window_size = [800, 600]
-        self.window = pg.display.set_mode(self.window_size)
+        self.window_size = self.config.WINDOW_SIZE
+        self.window = pg.display.set_mode(self.config.WINDOW_SIZE)
         pg.display.set_caption(self.config.NAME)
 
         self.ground_sprite = pg.image.load(os.path.join('img', 'ground3T.png'))
@@ -57,7 +58,10 @@ class Game:
         self.done = False
 
     def screen_draw(self):
-        pg.transform.smoothscale(self.screen, self.window_size, self.window)
+        if self.config.VIDEO_MODE == 0:
+            self.window.blit(self.screen, (0, 0))
+        else:
+            pg.transform.scale2x(self.screen, self.window)
         pg.display.flip()
 
     def screen_fadein(self):
@@ -83,10 +87,10 @@ class Game:
             clock.tick(60)
 
     def run(self):
+        main_menu = Menu(self, self.config.NAME, ["Single player", "Two players", "Options", "Exit"], -1)
+        pg.mixer.music.load(os.path.join('snd', 'menu.ogg'))
+        pg.mixer.music.play(-1)
         while not self.done:
-            main_menu = Menu(self, self.config.NAME, ["Single player", "Two players", "Options", "Exit"], -1)
-            pg.mixer.music.load(os.path.join('snd', 'menu.ogg'))
-            pg.mixer.music.play(-1)
             option = main_menu.run()
             if option == 0:
                 self.screen_fadeout()
@@ -102,10 +106,14 @@ class Game:
                     else:
                         option -= 1
                     if option == 1:
+                        pg.mixer.music.load(os.path.join('snd', 'menu.ogg'))
+                        pg.mixer.music.play(-1)
                         break
                     elif option == 2:
                         self.done = True
-            elif option == 3:
+            elif option == 2:
+                self.config.run()
+            else:
                 break
         self.screen_fadeout()
         pg.quit()

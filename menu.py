@@ -21,6 +21,9 @@ class Menu:
             pg.event.clear()
 
     def run(self):
+        self.done = False
+        self.choose = 0
+        pg.event.clear()
         while not self.done:
             self.tick()
         return self.choose
@@ -28,6 +31,7 @@ class Menu:
     def tick(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
+                self.choose = self.esc_option
                 self.done = True
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_RETURN or event.key == pg.K_SPACE:
