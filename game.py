@@ -8,7 +8,7 @@ from menu import Menu
 
 class Game:
     def __init__(self):
-        pg.mixer.pre_init(frequency=44100, size=16, channels=2, buffer=512)
+        pg.mixer.pre_init(frequency=44100, size=16, channels=2, buffer=1024)
         pg.init()
         self.font = os.path.join('font', '8-BIT WONDER.TTF')
         self.font_color = col.WHITE
@@ -52,6 +52,9 @@ class Game:
 
         self.player_sprite = pg.image.load(os.path.join('img', 'OpenGunnerHeroVer2.png')).convert()
         self.player_sprite.set_colorkey(self.player_sprite.get_at((1, 1)))
+
+        self.player2_sprite = pg.image.load(os.path.join('img', 'OpenGunnerHeroVer2_2.png')).convert()
+        self.player2_sprite.set_colorkey(self.player2_sprite.get_at((1, 1)))
 
         self.enemy_sprite = pg.image.load(os.path.join('img', 'OpenGunnerEnemySoldier.png')).convert()
         self.enemy_sprite.set_colorkey(self.enemy_sprite.get_at((1, 1)))
