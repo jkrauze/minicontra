@@ -185,6 +185,7 @@ class Game:
 
                     if self.actual_level.success:
                         if self.score > self.highscore:
+                            self.highscore = self.score
                             with open(self.highscore_file_path, 'w') as file:
                                 file.write(str(self.score))
                         pg.mixer.music.load(os.path.join('snd', 'end.ogg'))
