@@ -24,7 +24,6 @@ class Config:
         self.KEY_RIGHT = [pg.K_RIGHT, pg.K_d]
         self.KEY_JUMP = [pg.K_o, pg.K_1]
         self.KEY_SHOOT = [pg.K_p, pg.K_2]
-        self.clock = pg.time.Clock()
         self.choose = 0
         self.option_keys = ['VIDEO_MODE', 'KEY_UP', 'KEY_LEFT', 'KEY_DOWN',
                             'KEY_RIGHT', 'KEY_JUMP', 'KEY_SHOOT']
@@ -69,7 +68,7 @@ class Config:
                 if event.type == pg.KEYDOWN:
                     exec('self.{}[{}] = {}'.format(self.option_keys[self.choose], self.choose_value, int(event.key)))
                     key_pressed = True
-            self.clock.tick(self.TICK)
+            self.game.clock.tick(self.TICK)
 
     def set_value(self):
         self.changing = True
@@ -99,7 +98,7 @@ class Config:
 
             self.draw()
             self.game.screen_draw()
-            self.clock.tick(self.game.config.TICK)
+            self.game.clock.tick(self.game.config.TICK)
 
     def tick(self):
         for event in pg.event.get():
@@ -122,7 +121,7 @@ class Config:
 
         self.draw()
         self.game.screen_draw()
-        self.clock.tick(self.game.config.TICK)
+        self.game.clock.tick(self.game.config.TICK)
 
     def draw(self):
         self.game.screen.fill(self.game.config.BACKGROUND_COLOR)

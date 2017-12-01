@@ -10,6 +10,7 @@ class Game:
     def __init__(self):
         pg.mixer.pre_init(frequency=44100, size=16, channels=2, buffer=1024)
         pg.init()
+        self.clock = pg.time.Clock()
         self.font = os.path.join('font', '8-BIT WONDER.TTF')
         self.font_color = col.WHITE
         self.font_color_not_active = col.GRAY
@@ -125,6 +126,7 @@ class Game:
 
         self.background_list = pg.sprite.Group()
         self.block_list = pg.sprite.Group()
+        self.visible_block_list = pg.sprite.Group()
         self.player_bullets_list = pg.sprite.Group()
         self.enemy_bullets_list = pg.sprite.Group()
         self.enemies_list = pg.sprite.Group()
@@ -142,7 +144,6 @@ class Game:
         pg.display.flip()
 
     def screen_fadein(self):
-        clock = pg.time.Clock()
         screen_copy = self.screen.copy()
         surface = pg.Surface(self.config.SIZE)
         surface.fill(col.BLACK)
@@ -151,17 +152,16 @@ class Game:
             self.screen.blit(screen_copy, (0, 0))
             self.screen.blit(surface, (0, 0))
             self.screen_draw()
-            clock.tick(60)
+            self.clock.tick(60)
 
     def screen_fadeout(self):
-        clock = pg.time.Clock()
         surface = pg.Surface(self.config.SIZE)
         surface.fill(col.BLACK)
         for i in range(0, 255, 5):
             surface.set_alpha(i)
             self.screen.blit(surface, (0, 0))
             self.screen_draw()
-            clock.tick(60)
+            self.clock.tick(60)
 
     def run(self):
         main_menu = Menu(self, self.config.NAME, ["Single player", "Two players", "Options", "Exit"], -1)

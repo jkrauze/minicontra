@@ -7,7 +7,6 @@ class Menu:
         self.game = game
         self.done = False
         self.additional_fields = additional_fields
-        self.clock = pg.time.Clock()
         self.choose = 0
         self.title = title
         self.options = options
@@ -58,7 +57,7 @@ class Menu:
         self.draw()
 
         self.game.screen_draw()
-        self.clock.tick(self.game.config.TICK)
+        self.game.clock.tick(self.game.config.TICK)
 
     def draw(self):
         self.game.screen.blit(

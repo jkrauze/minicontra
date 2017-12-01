@@ -70,7 +70,6 @@ class Level:
         self.actual_length = self.player.rect.x
         self.players_alive = player_count
         self.return_state = 0
-        self.clock = pg.time.Clock()
         self.player_health = [pg.image.load(os.path.join('img', 'heart.png')).convert(),
                               pg.image.load(os.path.join('img', 'heart.png')).convert(),
                               pg.image.load(os.path.join('img', 'heart.png')).convert()]
@@ -184,7 +183,7 @@ class Level:
         self.handle_shooting()
         self.draw_hud()
         self.game.screen_draw()
-        self.clock.tick(self.game.config.TICK)
+        self.game.clock.tick(self.game.config.TICK)
 
     def draw_hud(self):
         for i in range(len(self.player_health)):
