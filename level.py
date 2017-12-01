@@ -51,11 +51,11 @@ class Level:
                     elif char == 'p':
                         Platform(self.game, 32, 32, 32 * pos, 32 * line_num, check_border(line, line_len, pos))
                     elif char == 's':
-                        Soldier(self.game, 1, 32 * pos, 32 * line_num - 28)
+                        Soldier(self.game, 1, 32 * pos, 32 * line_num - 18)
                     elif char == 'x':
-                        self.player = Player(self.game, 0, 32 * pos, 32 * line_num - 28)
+                        self.player = Player(self.game, 0, 32 * pos, 32 * line_num - 18)
                         if self.player_count == 2:
-                            self.player2 = Player(self.game, 1, 32 * pos, 32 * line_num - 28)
+                            self.player2 = Player(self.game, 1, 32 * pos, 32 * line_num - 18)
                     elif char == 'f':
                         self.boss = Boss(self.game, 15, 32 * pos, 32 * line_num - 76)
                         self.level_border = 32 * pos + 16

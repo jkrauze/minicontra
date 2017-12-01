@@ -52,15 +52,65 @@ class Game:
 
         self.player_sprite = pg.image.load(os.path.join('img', 'OpenGunnerHeroVer2.png')).convert()
         self.player_sprite.set_colorkey(self.player_sprite.get_at((1, 1)))
+        self.player_subsprites = [self.player_sprite.subsurface((137, 683, 50, 50)),
+                                  self.player_sprite.subsurface((137, 746, 50, 50)),
+                                  self.player_sprite.subsurface((193, 683, 50, 50)),
+                                  self.player_sprite.subsurface((193, 746, 50, 50)),
+                                  self.player_sprite.subsurface((126, 143, 50, 50)),
+                                  self.player_sprite.subsurface((331, 925, 50, 50)),
+                                  self.player_sprite.subsurface((760, 925, 50, 50)),
+                                  self.player_sprite.subsurface((126, 200, 50, 50)),
+                                  self.player_sprite.subsurface((331, 1063, 50, 50)),
+                                  self.player_sprite.subsurface((760, 1063, 50, 50)),
+                                  self.player_sprite.subsurface((24, 143, 50, 50)),
+                                  self.player_sprite.subsurface((137, 683, 50, 50)),
+                                  self.player_sprite.subsurface((137, 746, 50, 50)),
+                                  self.player_sprite.subsurface((24, 200, 50, 50)),
+                                  self.player_sprite.subsurface((193, 683, 50, 50)),
+                                  self.player_sprite.subsurface((193, 746, 50, 50)),
+                                  [self.player_sprite.subsurface((24 + 51 * i, 315, 50, 50)) for i in range(8)],
+                                  [self.player_sprite.subsurface((25 + 51 * i, 932, 50, 50)) for i in range(8)],
+                                  [self.player_sprite.subsurface((454 + 51 * i, 932, 50, 50)) for i in range(8)],
+                                  [self.player_sprite.subsurface((24 + 51 * i, 375, 50, 50)) for i in range(8)],
+                                  [self.player_sprite.subsurface((25 + 51 * i, 1070, 50, 50)) for i in range(8)],
+                                  [self.player_sprite.subsurface((454 + 51 * i, 1070, 50, 50)) for i in range(8)]]
 
         self.player2_sprite = pg.image.load(os.path.join('img', 'OpenGunnerHeroVer2_2.png')).convert()
         self.player2_sprite.set_colorkey(self.player2_sprite.get_at((1, 1)))
+        self.player2_subsprites = [self.player2_sprite.subsurface((137, 683, 50, 50)),
+                                  self.player2_sprite.subsurface((137, 746, 50, 50)),
+                                  self.player2_sprite.subsurface((193, 683, 50, 50)),
+                                  self.player2_sprite.subsurface((193, 746, 50, 50)),
+                                  self.player2_sprite.subsurface((126, 143, 50, 50)),
+                                  self.player2_sprite.subsurface((331, 925, 50, 50)),
+                                  self.player2_sprite.subsurface((760, 925, 50, 50)),
+                                  self.player2_sprite.subsurface((126, 200, 50, 50)),
+                                  self.player2_sprite.subsurface((331, 1063, 50, 50)),
+                                  self.player2_sprite.subsurface((760, 1063, 50, 50)),
+                                  self.player2_sprite.subsurface((24, 143, 50, 50)),
+                                  self.player2_sprite.subsurface((137, 683, 50, 50)),
+                                  self.player2_sprite.subsurface((137, 746, 50, 50)),
+                                  self.player2_sprite.subsurface((24, 200, 50, 50)),
+                                  self.player2_sprite.subsurface((193, 683, 50, 50)),
+                                  self.player2_sprite.subsurface((193, 746, 50, 50)),
+                                  [self.player2_sprite.subsurface((24 + 51 * i, 315, 50, 50)) for i in range(8)],
+                                  [self.player2_sprite.subsurface((25 + 51 * i, 932, 50, 50)) for i in range(8)],
+                                  [self.player2_sprite.subsurface((454 + 51 * i, 932, 50, 50)) for i in range(8)],
+                                  [self.player2_sprite.subsurface((24 + 51 * i, 375, 50, 50)) for i in range(8)],
+                                  [self.player2_sprite.subsurface((25 + 51 * i, 1070, 50, 50)) for i in range(8)],
+                                  [self.player2_sprite.subsurface((454 + 51 * i, 1070, 50, 50)) for i in range(8)]]
 
         self.enemy_sprite = pg.image.load(os.path.join('img', 'OpenGunnerEnemySoldier.png')).convert()
         self.enemy_sprite.set_colorkey(self.enemy_sprite.get_at((1, 1)))
+        self.enemy_subsprites = [[self.enemy_sprite.subsurface((24 + 51 * i, 286, 50, 50)) for i in range(8)],
+                                 [self.enemy_sprite.subsurface((24 + 51 * i, 346, 50, 50)) for i in range(8)],
+                                 self.enemy_sprite.subsurface((24, 186, 50, 50))]
 
         self.boss_sprite = pg.image.load(os.path.join('img', 'OpenGunnerMechs.png')).convert()
         self.boss_sprite.set_colorkey(self.boss_sprite.get_at((1, 1)))
+        self.boss_subsprites = [self.boss_sprite.subsurface((136, 155, 140, 108)),
+                                self.boss_sprite.subsurface((136, 267, 140, 108)),
+                                self.boss_sprite.subsurface((277, 267, 140, 108))]
 
         self.bullet_sprite = pg.image.load(os.path.join('img', 'M484BulletCollection2.png')).convert()
         self.bullet_sprite.set_colorkey(self.bullet_sprite.get_at((1, 1)))

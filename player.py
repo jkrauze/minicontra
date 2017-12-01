@@ -14,13 +14,13 @@ class Player(pg.sprite.Sprite):
         self.width = 50
         self.height = 50
         self.hp = 3
-        self.sprite_sheet = self.game.player_sprite if number == 0 else self.game.player2_sprite
-        self.image = self.sprite_sheet.subsurface((24, 143, 50, 50))
+        self.sprite_sheet = self.game.player_subsprites if number == 0 else self.game.player2_subsprites
+        self.image = self.sprite_sheet[10]
         self.rect = self.image.get_rect()
         self.screen_middle = self.game.config.SIZE[0] // 2
         self.rect.x = x
         self.rect.y = y
-        self.mask = pg.mask.from_surface(self.game.enemy_sprite.subsurface((24, 186, 50, 50)))
+        self.mask = pg.mask.from_surface(self.game.enemy_subsprites[2])
         self.v = [0, 0]
         self.a = [0, 0]
         self.v_max = 4
@@ -72,61 +72,60 @@ class Player(pg.sprite.Sprite):
             if x_move == 0 and y_move != 0:
                 if self.last_move == 1:
                     if y_move == -1:
-                        self.image = self.sprite_sheet.subsurface((137, 683, 50, 50))
+                        self.image = self.sprite_sheet[0]
                     else:
-                        self.image = self.sprite_sheet.subsurface((137, 746, 50, 50))
+                        self.image = self.sprite_sheet[1]
                 else:
                     if y_move == -1:
-                        self.image = self.sprite_sheet.subsurface((193, 683, 50, 50))
+                        self.image = self.sprite_sheet[2]
                     else:
-                        self.image = self.sprite_sheet.subsurface((193, 746, 50, 50))
+                        self.image = self.sprite_sheet[3]
             elif x_move == 1 or self.last_move == 1:
                 if y_move == 0:
-                    self.image = self.sprite_sheet.subsurface((126, 143, 50, 50))
+                    self.image = self.sprite_sheet[4]
                 elif y_move == -1:
-                    self.image = self.sprite_sheet.subsurface((331, 925, 50, 50))
+                    self.image = self.sprite_sheet[5]
                 else:
-                    self.image = self.sprite_sheet.subsurface((760, 925, 50, 50))
+                    self.image = self.sprite_sheet[6]
             else:
                 if y_move == 0:
-                    self.image = self.sprite_sheet.subsurface((126, 200, 50, 50))
+                    self.image = self.sprite_sheet[7]
                 elif y_move == -1:
-                    self.image = self.sprite_sheet.subsurface((331, 1063, 50, 50))
+                    self.image = self.sprite_sheet[8]
                 else:
-                    self.image = self.sprite_sheet.subsurface((760, 1063, 50, 50))
+                    self.image = self.sprite_sheet[9]
             self.run_animation = 0
         elif x_move == 0:
             if self.last_move == 1:
                 if y_move == 0:
-                    self.image = self.sprite_sheet.subsurface((24, 143, 50, 50))
+                    self.image = self.sprite_sheet[10]
                 elif y_move == -1:
-                    self.image = self.sprite_sheet.subsurface((137, 683, 50, 50))
+                    self.image = self.sprite_sheet[11]
                 else:
-                    self.image = self.sprite_sheet.subsurface((137, 746, 50, 50))
+                    self.image = self.sprite_sheet[12]
             else:
                 if y_move == 0:
-                    self.image = self.sprite_sheet.subsurface((24, 200, 50, 50))
+                    self.image = self.sprite_sheet[13]
                 elif y_move == -1:
-                    self.image = self.sprite_sheet.subsurface((193, 683, 50, 50))
+                    self.image = self.sprite_sheet[14]
                 else:
-                    self.image = self.sprite_sheet.subsurface((193, 746, 50, 50))
+                    self.image = self.sprite_sheet[15]
             self.run_animation = 0
         else:
             if x_move == 1:
                 if y_move == 0:
-                    self.image = self.sprite_sheet.subsurface((24 + 51 * (self.run_animation // 3), 315, 50, 50))
+                    self.image = self.sprite_sheet[16][self.run_animation // 3]
                 elif y_move == -1:
-                    self.image = self.sprite_sheet.subsurface((25 + 51 * (self.run_animation // 3), 932, 50, 50))
+                    self.image = self.sprite_sheet[17][self.run_animation // 3]
                 else:
-                    self.image = self.sprite_sheet.subsurface((454 + 51 * (self.run_animation // 3), 932, 50, 50))
+                    self.image = self.sprite_sheet[18][self.run_animation // 3]
             else:
                 if y_move == 0:
-                    self.image = self.sprite_sheet.subsurface((24 + 51 * (self.run_animation // 3), 375, 50, 50))
+                    self.image = self.sprite_sheet[19][self.run_animation // 3]
                 elif y_move == -1:
-                    self.image = self.sprite_sheet.subsurface((25 + 51 * (self.run_animation // 3), 1070, 50, 50))
+                    self.image = self.sprite_sheet[20][self.run_animation // 3]
                 else:
-                    self.image = self.sprite_sheet.subsurface(
-                        (454 + 51 * (self.run_animation // 3), 1070, 50, 50))
+                    self.image = self.sprite_sheet[21][self.run_animation // 3]
             self.run_animation = (self.run_animation + 1) % 24
         self.rect = self.image.get_rect()
         self.rect.midbottom = actual_midbottom
