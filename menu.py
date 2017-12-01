@@ -3,9 +3,10 @@ from config import Config
 
 
 class Menu:
-    def __init__(self, game, title, options, esc_option):
+    def __init__(self, game, title, options, esc_option, additional_fields=None):
         self.game = game
         self.done = False
+        self.additional_fields = additional_fields
         self.clock = pg.time.Clock()
         self.choose = 0
         self.title = title
@@ -62,8 +63,17 @@ class Menu:
     def draw(self):
         self.game.screen.blit(
             pg.font.Font(self.game.font, 40).render(self.title, 1, self.game.font_color_title), (50, 50))
+        options_start = 200 + (0 if not self.additional_fields else len(self.additional_fields) * 40)
+        if self.additional_fields:
+            for i in range(len(self.additional_fields)):
+                self.game.screen.blit(
+                    pg.font.Font(self.game.font, 20).render(self.additional_fields[i][0], 1, self.game.font_color_not_active),
+                    (50, 150 + 50 * i))
+                self.game.screen.blit(
+                    pg.font.Font(self.game.font, 20).render(self.additional_fields[i][1], 1, self.game.font_color_not_active),
+                    (250, 150 + 50 * i))
         for i in range(len(self.options)):
             self.game.screen.blit(
                 pg.font.Font(self.game.font, 20).render(self.options[i], 1,
                                                         self.game.font_color if i != self.choose else self.game.font_color_choosed),
-                (50, 200 + 60 * i))
+                (50, options_start + 60 * i))

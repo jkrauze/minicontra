@@ -140,7 +140,9 @@ class Game:
                         pg.mixer.music.load(os.path.join('snd', 'end.ogg'))
                         pg.mixer.music.set_volume(0.7)
                         pg.mixer.music.play(-1)
-                        option = Menu(self, "The End", ["Start again", "Return to menu", "Exit game"], -1).run()
+                        score_results = [["score", str(self.score)], ["highscore", str(self.highscore)]]
+                        option = Menu(self, "The End", ["Start again", "Return to menu", "Exit game"], -1,
+                                      additional_fields=score_results).run()
                     elif option == 0:
                         self.lose_sound.play()
                         option = Menu(self, "Game Over", ["Try again", "Return to menu", "Exit game"], -1).run()

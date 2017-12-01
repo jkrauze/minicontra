@@ -86,6 +86,18 @@ class Level:
         self.game.screen.fill(self.game.config.BACKGROUND_COLOR)
         self.game.screen.blit(
             pg.font.Font(self.game.font, 40).render("level " + self.name, 1, self.game.font_color), (50, 50))
+        self.game.screen.blit(
+            pg.font.Font(self.game.font, 20).render("game score", 1, self.game.font_color_not_active), (50, 200))
+        self.game.screen.blit(
+            pg.font.Font(self.game.font, 20).render("level highscore", 1, self.game.font_color_not_active), (50, 250))
+        self.game.screen.blit(
+            pg.font.Font(self.game.font, 20).render("game highscore", 1, self.game.font_color_not_active), (50, 300))
+        self.game.screen.blit(
+            pg.font.Font(self.game.font, 20).render(str(self.game.score), 1, self.game.font_color_not_active), (350, 200))
+        self.game.screen.blit(
+            pg.font.Font(self.game.font, 20).render(str(self.highscore), 1, self.game.font_color_not_active), (350, 250))
+        self.game.screen.blit(
+            pg.font.Font(self.game.font, 20).render(str(self.game.highscore), 1, self.game.font_color_not_active), (350, 300))
         self.game.screen_draw()
 
     def run(self):
