@@ -11,7 +11,7 @@ sudo dnf install python3
 ```
 You should have [pygame](https://www.pygame.org "pygame homepage") package installed also.
 ```
-pip install --user pygame
+pip3 install --user pygame
 ```
 
 ### Run game
@@ -55,6 +55,7 @@ Now, press `i` and `Insert` key and release your imagination. Make sure there is
 * `p` - platform; player can stand on it and go through; bullets also (bullets cannot stand on it of course...)
 * `s` - soldier enemy
 * `l` - background rock
+* `f` - final boss
 
 To save your work, press `ESC` and type `:wq`.
 
@@ -68,11 +69,11 @@ As I wrote on the beginning, it's a simple game made as a homework. Lots of thin
 
 ## I don't see any turrets and there's only one type of level...
 
-Huh... This game is only __inspired__ by Contra. It's not a remake. I see some space for improvements like turret enemies, player weapon powerups, horizontal levels... If you want to develop it, you are free to fork it.
+Huh... This game is only __inspired__ by Contra. It's not a remake. I see some room for improvements like turret enemies, player weapon powerups, horizontal levels... If you want to develop it, you are free to fork it.
 
 ## I don't know what I'm doing here...
 
-It's okay to get lost in the internet. Just exit this page. Or watch some [random video on YouTube](http://ytroulette.com "YouTube Roulette").
+It's okay to get lost in the internet. Just exit this page. Or watch some [random video on YouTube](http://ytroulette.com "YouTube Roulette"). Or [less random ones](https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw "3Blue1Brown channel").
 
 ## External sources
 
