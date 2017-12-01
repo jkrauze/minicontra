@@ -10,7 +10,9 @@ class Block(pg.sprite.Sprite):
     def __init__(self, game, width, height, x, y):
         super().__init__()
         self.game = game
-        self.game.block_list.add(self)
+        self.visible = False if x > 700 else True
+        if self.visible:
+            self.game.block_list.add(self)
         self.game.sprites_list.add(self)
         self.width = width
         self.height = height
@@ -24,3 +26,9 @@ class Block(pg.sprite.Sprite):
                                 self.game.ground_sprite.subsurface(
                                     (64 + 160 * self.sprite_pos[0], 32 * self.sprite_pos[1], 32, 32)), x,
                                 y - 20)
+
+    def update(self):
+        if not self.visible:
+            if self.rect.x < 700:
+                self.game.block_list.add(self)
+                self.visible = True

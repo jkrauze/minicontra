@@ -6,7 +6,9 @@ class Boss(pg.sprite.Sprite):
     def __init__(self, game, hp, x, y):
         super().__init__()
         self.game = game
-        self.game.enemies_list.add(self)
+        self.visible = False if x > 640 else True
+        if self.visible:
+            self.game.enemies_list.add(self)
         self.game.sprites_list.add(self)
         self.hp = hp
         self.width = 140
@@ -29,8 +31,12 @@ class Boss(pg.sprite.Sprite):
             self.image = self.game.boss_subsprites[2]
 
     def update(self):
-        if self.rect.x > self.game.config.SIZE[0]:
-            return
+        if not self.visible:
+            if self.rect.x < 640:
+                self.game.enemies_list.add(self)
+                self.visible = True
+            else:
+                return
         self.weapon.handle_shooting(self.rect.left + 15,
                                     self.rect.centery - 10,
                                     (-1, 0))

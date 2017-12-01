@@ -6,7 +6,9 @@ class Soldier(pg.sprite.Sprite):
     def __init__(self, game, hp, x, y):
         super().__init__()
         self.game = game
-        self.game.enemies_list.add(self)
+        self.visible = False if x > 640 else True
+        if self.visible:
+            self.game.enemies_list.add(self)
         self.game.sprites_list.add(self)
         self.hp = hp
         self.width = 50
@@ -44,13 +46,19 @@ class Soldier(pg.sprite.Sprite):
         self.run_animation = (self.run_animation + 1) % 24
 
     def update(self):
-        if self.rect.x > self.game.config.SIZE[0]:
-            return
+        if not self.visible:
+            if self.rect.x < 640:
+                self.game.enemies_list.add(self)
+                self.visible = True
+            else:
+                return
         way = self.direction_x()
         diff = max(1, self.v[1])
         self.rect.y += diff
         standing = pg.sprite.spritecollide(self, self.game.block_list, False)
-        self.on_ground = bool(standing)
+        if not standing:
+            self.kill()
+            return
         self.rect.y -= diff
         if self.v == [0, 0]:
             self.moving_right, self.moving_left = self.moving_left, self.moving_right

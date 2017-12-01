@@ -14,3 +14,13 @@ class Rock(Image):
         if border != 0:
             image = pg.transform.rotate(image, -90 * border)
         super().__init__(game, image, x, y)
+        if not self.visible:
+            self.visible = False if x > 750 else True
+            if self.visible:
+                self.game.background_list.add(self)
+
+    def update(self):
+        if not self.visible:
+            if self.rect.x < 750:
+                self.game.background_list.add(self)
+                self.visible = True
