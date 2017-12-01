@@ -51,7 +51,7 @@ class Boss(pg.sprite.Sprite):
         way = self.direction_x()
         diff = max(1, self.v[1])
         self.rect.y += diff
-        standing = pg.sprite.spritecollide(self, self.game.block_list, False, pg.sprite.collide_mask)
+        standing = pg.sprite.spritecollide(self, self.game.block_list, False)
         self.on_ground = bool(standing)
         self.rect.y -= diff
         way = self.direction_x()
@@ -67,7 +67,7 @@ class Boss(pg.sprite.Sprite):
         self.v[1] += self.a[1]
 
         self.rect.y += self.v[1]
-        collides_y = pg.sprite.spritecollide(self, self.game.block_list, False, pg.sprite.collide_mask)
+        collides_y = pg.sprite.spritecollide(self, self.game.block_list, False)
         if collides_y:
             if self.v[1] > 0:
                 self.rect.y = collides_y[0].rect.top - self.height
@@ -80,7 +80,7 @@ class Boss(pg.sprite.Sprite):
             way = self.direction_x()
             self.rect.x += way * 30
             self.rect.y += 1
-            collides = pg.sprite.spritecollide(self, self.game.block_list, False, pg.sprite.collide_mask)
+            collides = pg.sprite.spritecollide(self, self.game.block_list, False)
             self.rect.y -= 1
             self.rect.x -= way * 30
             if len(collides) == 0:
